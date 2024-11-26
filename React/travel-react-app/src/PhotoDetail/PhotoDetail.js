@@ -80,17 +80,24 @@ const PhotoDetail = () => {
         setCurrentPage(pageNumber);
     };
 
-    // 전체 저장 버튼
-    const savePhotoButton = () => {};
+    // 전체 저장 버튼 -------이동할 경로지정해야됨
+    const savePhotoButton = () => {
+        // navigator.navigate("이동할 경로넣기")
+    };
 
     return (
         <div style={{
-                padding: "30px",
-                backgroundImage: `url(${backgroundImage})`, // 배경 이미지 추가
-                backgroundSize: "cover", // 배경 이미지 크기 설정 (화면에 맞게 크기 조정)
-                backgroundPosition: "center", // 배경 이미지 위치 설정
-                backgroundRepeat: "no-repeat", // 배경 이미지 반복 안함
-                height:"100vh"
+            textAlign: "center",
+            padding: "30px",
+            backgroundImage: `url(${backgroundImage})`,
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+            backgroundRepeat: "no-repeat",
+            height: "100%", // 부모 div가 화면을 다 채우도록 설정
+            minHeight: "100vh", // 최소 높이 100vh로 설정
+            display: "flex",
+            flexDirection: "column", // 세로로 정렬
+            justifyContent: "space-between", // 위 아래 공간 분배
             }}
         >
             <h2 style={{fontSize:"70px", textShadow: '3px 3px 5px rgba(0, 0, 0, 0.5)',color:"#87CEEB"}}>PhotoDetail</h2>
