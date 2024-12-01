@@ -20,9 +20,9 @@ public class UserEntity {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	private Long id;
-	private String userName;
-	private String nickName;
-	private String password;
-	private String authPassword;
+	private Long id;			//고유 id
+	private String userId;		//유저Id
+	private String userName; 	//유저이름
+	private String nickName;	//닉네임
+	private String password;	//비밀번호
 }

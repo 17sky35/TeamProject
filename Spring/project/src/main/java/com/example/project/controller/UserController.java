@@ -11,14 +11,16 @@ import com.example.project.dto.UserDTO;
 import com.example.project.model.UserEntity;
 import com.example.project.service.UserService;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RestController
 @RequestMapping("/travle")
+@RequiredArgsConstructor
 public class UserController {
 
-	private UserService service;
+	private final UserService service;
 	
 	@PostMapping("/signup")
 	public ResponseEntity<?> registerUser(@RequestBody UserDTO userDTO){
@@ -26,6 +28,7 @@ public class UserController {
 		try {
 			//UserDTO를 기반으로 UserEntity 객체를 생성한다.
 			UserEntity user = UserEntity.builder()
+					.userId(userDTO.getUserId())
 					.userName(userDTO.getUserName())
 					//사용자에게 입력받은 비밀번호 암호화
 					.password(userDTO.getPassword())
@@ -38,6 +41,7 @@ public class UserController {
 			//등록된 UserEntity 정보를 UserDTO로 변환하여 응답에 사용한다.
 			UserDTO responseUserDTO = UserDTO.builder()
 					.id(registeredUser.getId())
+					.userId(registeredUser.getUserId())
 					.userName(registeredUser.getUserName())
 					.build();
 			// 성공적으로 저장된 유저 정보를 포함한 HTTP 200 응답을 반환한다.

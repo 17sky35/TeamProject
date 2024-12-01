@@ -3,6 +3,7 @@ import { useContext } from "react";
 import { UserContext } from "../context/UserContext";
 import { useNavigate } from "react-router-dom";
 import TopIcon from "../TopIcon/TopIcon";
+import axios from "axios";
 
 const Login = () => {
   const { user } = useContext(UserContext); // `user` 배열로부터 사용자 정보를 가져옴

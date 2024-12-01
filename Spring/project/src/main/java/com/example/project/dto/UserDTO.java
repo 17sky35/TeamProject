@@ -13,20 +13,12 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class UserDTO {
 
-	private Long id;
-	private String token;
-	private String userName;
-	private String nickName;
-	private String password;
-	private String authPassword;
+	private Long id;			//고유 id
+	private String userId;		//유저Id
+	private String userName; 	//유저이름
+	private String nickName;	//닉네임
+	private String password;	//비밀번호
 	
-//	public UserDTO(final UserEntity entity) {
-//		this.id = entity.getId();
-//		this.userName = entity.getUserName();
-//		this.nickName = entity.getNickName();
-//		this.password = entity.getPassword();
-//		this.authPassword = entity.getAuthPassword();
-//	}
 	
 	
 }

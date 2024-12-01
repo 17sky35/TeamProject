@@ -14,8 +14,8 @@ function Signup() {
 
   const navigate = useNavigate();
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
+  const handleSubmit = (e) => {
+    e.preventDefault();
 
     if (userPassword !== userPasswordConfirm) {
       alert("비밀번호와 비밀번호 확인이 일치하지 않습니다.");
@@ -23,13 +23,16 @@ function Signup() {
     }
 
     const newUser = {
-      id: userId,
-      password: userPassword,
-      name: userName,
-      nickname: userNickName,
+      userId,
+      userName,
+      userNickName,
+      userPassword,
     };
 
-    setUser((prev) => [...prev, newUser]);
+    // setUser((prev) => [...prev, newUser]);
+    const response = axios.post("http://localhost:9090/travle/signup",newUser,{
+      headers:{"Content-Type":"application/json"},
+    })
 
     if (!isIdChecked) {
       alert("아이디 중복체크를 해주세요.");
@@ -37,6 +40,8 @@ function Signup() {
     }else{
       alert("회원가입이 완료되었습니다.");
     }
+
+
     console.log("등록된 사용자:", user);
     navigate("/Login");
   };
