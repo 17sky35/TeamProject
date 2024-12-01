@@ -21,7 +21,7 @@ public class UserService {
 		}
 		final String userId = userEntity.getUserId();
 		//존재하는 ID인지 검사
-		if(repository.existsByUsername(userId)) {
+		if(repository.existsByUserName(userId)) {
 			log.warn("userId이 이미 존재 합니다.1 {}", userId);
 			throw new RuntimeException("이미 존재하는 ID 입니다.");
 		}

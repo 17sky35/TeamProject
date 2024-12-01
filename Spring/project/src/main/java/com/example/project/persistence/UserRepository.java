@@ -8,9 +8,9 @@ import com.example.project.model.UserEntity;
 @Repository
 public interface UserRepository extends JpaRepository<UserEntity, Long> {
 
-		UserEntity findByUsername(String username);
+		UserEntity findByUserName(String userName);
 		
-		Boolean existsByUsername(String username);
+		Boolean existsByUserName(String userName);
 		
-		UserEntity findByUsernameAndPassword(String username, String password);
+		UserEntity findByUserNameAndPassword(String userName, String password);
 }
