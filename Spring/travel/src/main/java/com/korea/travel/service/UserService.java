@@ -1,8 +1,6 @@
 package com.korea.travel.service;
 
 
-import java.util.Optional;
-
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -52,7 +50,7 @@ public class UserService {
 		}
 	}
 		
-	//로그인 userName과 userPassword로 조회하기
+	//주어진 userName과 userPassword로 UserEntity 조회하기
 	public UserDTO getByCredentials(String userId,String userPassword) {
 		UserEntity user = repository.findByUserId(userId);
 		//DB에 저장된 암호화된 비밀번호와 사용자에게 입력받아 전달된 암호화된 비밀번호를 비교
@@ -66,20 +64,6 @@ public class UserService {
 				.userPassword(user.getUserPassword())
 				.token(token)
 				.build();
-		}else {
-			return null;
-		}
-	}
-	
-	//닉네임 수정하기
-	public UserDTO userNickNameEdit(Long id,UserDTO dto) {
-		Optional <UserEntity> user = repository.findById(id);
-		if(user.isPresent()) {
-			UserEntity entity = user.get();
-			entity.setUserNickName(dto.getUserNickName());
-			return UserDTO.builder()
-					.userNickName(entity.getUserNickName())
-					.build();
 		}else {
 			return null;
 		}

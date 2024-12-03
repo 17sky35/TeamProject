@@ -2,15 +2,14 @@ package com.korea.travel.controller;
 
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.korea.travel.dto.ResponseDTO;
 import com.korea.travel.dto.UserDTO;
+import com.korea.travel.model.UserEntity;
 import com.korea.travel.service.UserService;
 
 import lombok.RequiredArgsConstructor;
@@ -37,7 +36,7 @@ public class UserController {
     }
 
     // 로그인
-    @PostMapping("/login")
+    @PostMapping("/signin")
     public ResponseEntity<?> authenticate(@RequestBody UserDTO dto) {
         UserDTO userDTO = service.getByCredentials(dto.getUserId(), dto.getUserPassword());
         
@@ -50,20 +49,5 @@ public class UserController {
         	return ResponseEntity.badRequest().body(responseDTO);
         }
     }
-    //id로 닉네임수정하기
-    @PutMapping("/userNickName/{id}")
-    public ResponseEntity<?> userNickNameEdit(@PathVariable Long id,@RequestBody UserDTO dto){
-    	UserDTO userDTO = service.userNickNameEdit(id,dto);
-    	if(userDTO != null) {
-    		return ResponseEntity.ok().body(userDTO);
-    	}else {
-    		ResponseDTO responseDTO = ResponseDTO.builder()
-        			.error("수정 실패")
-        			.build();
-        	return ResponseEntity.badRequest().body(responseDTO);
-    	}
-    }
-    
-    
-    
+
 }
