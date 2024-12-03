@@ -17,7 +17,7 @@ const Login = () => {
     event.preventDefault();
 
     try {
-      const response = await axios.post("http://localhost:9090/travel/signin", {
+      const response = await axios.post("http://localhost:9090/travel/login", {
         userId:loginId,
         userPassword:loginPassword,
       }, {

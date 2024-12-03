@@ -41,7 +41,7 @@ function Signup() {
       userId:userId,
       userName:userName,
       userNickName:userNickName,
-      userPassword:userPassword,
+      userPassword:userPassword
     };
 
     // 아이디 중복 체크 여부 확인
