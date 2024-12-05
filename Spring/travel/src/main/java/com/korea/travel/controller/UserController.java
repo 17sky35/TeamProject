@@ -3,6 +3,7 @@ package com.korea.travel.controller;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -90,11 +91,12 @@ public class UserController {
     
     //프로필사진 수정
     @PatchMapping("/userProfileImageEdit/{id}")
-    public ResponseEntity<?> userProfileImageEdit(@PathVariable Long id, @RequestParam("file") MultipartFile file) {
+    public ResponseEntity<?> userProfileImageEdit(@PathVariable Long id, 
+    		@RequestParam("file") MultipartFile file,@RequestParam("token") String token) {
 
         try {
             // 서비스 호출하여 프로필 사진을 수정하고 결과를 반환
-            UserDTO updatedUserDTO = service.userProfileImageEdit(id, file);
+            UserDTO updatedUserDTO = service.userProfileImageEdit(id, file, token);
 
             return ResponseEntity.ok().body(updatedUserDTO);  // 성공적으로 수정된 UserDTO 반환
 

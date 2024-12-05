@@ -12,7 +12,7 @@ const TopIcon = () => {
   const [logo, setLogo] = useState(null);
   const [isbutton,setIsbutton] = useState(false);
 
-  const {user} = useContext(UserContext);
+  const {user,profileImage} = useContext(UserContext);
 
   
 
@@ -61,7 +61,7 @@ const TopIcon = () => {
         ))}
         <div style={{width:"130px",height:"100px",justifyItems:"center",alignItems:"center",margin:"5px"}}>
           <ProfileImage 
-              src={user.userProfileImage} // 기본 이미지나 프로필 이미지 표시
+              src={profileImage} // 기본 이미지나 프로필 이미지 표시
               alt="profile"
               onClick={()=>setIsbutton(!isbutton)}
           />

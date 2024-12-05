@@ -35,21 +35,25 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 		
 		if (token != null && token.startsWith("Bearer ")) {
             token = token.substring(7);  // "Bearer " 제거
-            if (!tokenProvider.isTokenExpired(token)) {
-                try {
+            try {
+            	if (!tokenProvider.isTokenExpired(token)) {
+                
                     String userId = tokenProvider.validateAndGetUserId(token);
                     UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userId, null, new ArrayList<>());
                     SecurityContextHolder.getContext().setAuthentication(authentication);
-                } catch (Exception e) {
-                    response.setStatus(HttpServletResponse.SC_FORBIDDEN);  // 403 Forbidden
-                    response.getWriter().write("Invalid or expired token");
-                    return; // 토큰이 유효하지 않거나 만료되었으면, 필터에서 더 이상 진행되지 않도록
-                }
-            } else {
+                
+	            } else {
+	                response.setStatus(HttpServletResponse.SC_FORBIDDEN);  // 403 Forbidden
+	                response.getWriter().write("Token is expired");
+	                return;
+	            }
+            	
+            } catch (Exception e) {
                 response.setStatus(HttpServletResponse.SC_FORBIDDEN);  // 403 Forbidden
-                response.getWriter().write("Token is expired");
-                return;
+                response.getWriter().write("Invalid or expired token");
+                return; // 토큰이 유효하지 않거나 만료되었으면, 필터에서 더 이상 진행되지 않도록
             }
+            
         } else {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);  // 401 Unauthorized
             response.getWriter().write("Authorization header is missing or invalid");

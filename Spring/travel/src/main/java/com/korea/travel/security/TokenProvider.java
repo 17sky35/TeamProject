@@ -10,8 +10,10 @@ import org.springframework.stereotype.Service;
 import com.korea.travel.model.UserEntity;
 
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.SignatureException;
 
 @Service
 public class TokenProvider {
@@ -60,9 +62,13 @@ public class TokenProvider {
 					.parseClaimsJws(token)
 					.getBody();
 			return claims.getSubject();
-		} catch (Exception e) {
-			throw new RuntimeException("Token validation failed",e);
-		}
+		} catch (ExpiredJwtException e) {
+	        throw new RuntimeException("Token is expired", e);  // 만료된 토큰 예외 처리
+	    } catch (SignatureException e) {
+	        throw new RuntimeException("Invalid token signature", e);  // 서명 오류 예외 처리
+	    } catch (Exception e) {
+	        throw new RuntimeException("Token validation failed", e);
+	    }
 		
 	}
 		

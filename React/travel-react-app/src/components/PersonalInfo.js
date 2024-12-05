@@ -19,7 +19,7 @@ const PersonalInfo = () => {
   const [newPassword, setNewPassword] = useState("");
   const [newPasswordConfirm, setNewPasswordConfirm] = useState("");
   const [userNickname, setUserNickname] = useState('길동');
-  const { user, setUser } = useContext(UserContext);
+  const { user, setUser,profileImage, setProfileImage  } = useContext(UserContext);
 
   const openPopup = (type) => {
     setCurrentPopup(type);
@@ -51,26 +51,26 @@ const PersonalInfo = () => {
       // FormData 객체를 사용해 파일과 기타 데이터를 전송
       const formData = new FormData();
       formData.append('file', file);
-
-      const userProfile = {
-        id: user.userId,
-        userProfileImage: user.userProfileImage
-      };
+      formData.append('token', user.token);
 
       try {
         // 백엔드에 프로필 사진을 업로드
-        const response = await axios.patch(`http://localhost:9090/travel/userProfileImageEdit/${user.id}`, userProfile, {
+        const response = await axios.patch(`http://localhost:9090/travel/userProfileImageEdit/${user.id}`, formData, {
           headers: {
             'Content-Type': 'multipart/form-data',
+            'Authorization': `Bearer ${user.token}`
           },
         });
+        
+        if(response.data){
+          //성공적으로 업로드되면 사용자 정보 업데이트
+          setUser(response.data);
+        }
 
-        // 성공적으로 업로드되면 사용자 정보 업데이트
-        setUser(response.data);
       } catch (err) {
         console.error('파일 업로드 실패:', err);
       }
-    }    
+    }//if문 종료
 
   };
 
@@ -103,7 +103,7 @@ const PersonalInfo = () => {
         <div className="ProfileWrapper ">
           <img
             className="ProfileImage"
-            src={user.userProfileImage}
+            src={profileImage}
             alt="profile"
           />
           <div style={{display:"flex" }}>
@@ -125,7 +125,7 @@ const PersonalInfo = () => {
 
         <div className="PersonalContainer">
           <div>이름 : {user.userName}</div>
-          <div>닉네임 : {user.userNickname}</div>
+          <div>닉네임 : {user.userNickName}</div>
           <div>아이디 : {user.userId}</div>
           <button onClick={() => openPopup('password')}>비밀번호 변경</button>
           <button onClick={() => openPopup('nickname')}>닉네임 변경</button>
