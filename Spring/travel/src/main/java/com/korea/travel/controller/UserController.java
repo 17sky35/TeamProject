@@ -1,13 +1,17 @@
 package com.korea.travel.controller;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.korea.travel.dto.ResponseDTO;
 import com.korea.travel.dto.UserDTO;
@@ -55,7 +59,7 @@ public class UserController {
     
     
     //userPassword 수정하기
-    @PutMapping("/userPasswordEdit/{id}")
+    @PatchMapping("/userPasswordEdit/{id}")
     public ResponseEntity<?> userPasswordEdit(@PathVariable Long id,@RequestBody UserDTO dto){
     	UserDTO userDTO = service.userPasswordEdit(id,dto);
     	if(userDTO != null) {
@@ -70,7 +74,7 @@ public class UserController {
     
     
     //userNickName 수정하기
-    @PutMapping("/userNickNameEdit/{id}")
+    @PatchMapping("/userNickNameEdit/{id}")
     public ResponseEntity<?> userNickNameEdit(@PathVariable Long id,@RequestBody UserDTO dto){
     	UserDTO userDTO = service.userNickNameEdit(id,dto);
     	if(userDTO != null) {
@@ -83,6 +87,24 @@ public class UserController {
     	}
     }
     
+    
+    //프로필사진 수정
+    @PatchMapping("/userProfileImageEdit/{id}")
+    public ResponseEntity<?> userProfileImageEdit(@PathVariable Long id, @RequestParam("file") MultipartFile file) {
+
+        try {
+            // 서비스 호출하여 프로필 사진을 수정하고 결과를 반환
+            UserDTO updatedUserDTO = service.userProfileImageEdit(id, file);
+
+            return ResponseEntity.ok().body(updatedUserDTO);  // 성공적으로 수정된 UserDTO 반환
+
+        } catch (RuntimeException e) {
+            // 예외 처리: 사용자 정보가 없거나, 파일 업로드 중 에러가 발생한 경우
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                                 .body("Error occurred during profile update: " + e.getMessage());
+        }
+    }
+
     
     //로그아웃
     @PostMapping("/logout/{id}")
