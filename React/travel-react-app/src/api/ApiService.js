@@ -36,12 +36,12 @@ export async function call(api,method,request){
         //에러가 발생하면, 이를 console.log로 출력하여 디버깅하거나 문제를 파악할 수 있도록 한다.
         //상태코드가 403일때 login으로 리다이렉트
         if(error.status === 403){
-            window.location.href="/";
+            window.location.href="/main";
         }
     })
 }//call
 
-export function login (userDTO) {
+export function UserLogin (userDTO) {
     return call("/travel/login", "POST", userDTO)
         .then(response => {
             console.log(response)
@@ -51,7 +51,8 @@ export function login (userDTO) {
                 //token이 존재할 경우 Todo화면으로 리다이렉트
                 window.location.href="/main";
             } else {
-                window.location.href="/travel/login";
+                window.location.href="/login";
             }
-        })
+        }
+    )
 }

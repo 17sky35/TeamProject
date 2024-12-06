@@ -4,7 +4,8 @@ import { useNavigate } from "react-router-dom";
 import TopIcon from "../TopIcon/TopIcon";
 import axios from "axios";
 import "../css/Strat.css";
-import defaultImage from "../image/defaultImage.png"
+import defaultImage from "../image/defaultImage.png";
+import {call} from "../api/ApiService";
 
 function Signup() {
   const { user, setUser } = useContext(UserContext);
@@ -77,7 +78,6 @@ function Signup() {
     };
 
     try {
-
       const response = await axios.post("http://localhost:9090/travel/signup", newUser, {
         headers: { "Content-Type": "application/json" },
       });

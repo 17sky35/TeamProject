@@ -28,6 +28,8 @@ public class SecurityConfig {
           	.requestMatchers("/travel/login","/travel/signup","/api/email/*").permitAll()  // /public/** 경로는 인증 없이 허용
           	.anyRequest().authenticated()  // 그 외 요청은 인증 필요
         	.and()
+        	.cors()
+        	.and()
         	.addFilterBefore(new JwtAuthenticationFilter(tokenProvider), UsernamePasswordAuthenticationFilter.class);
             
         

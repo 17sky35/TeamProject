@@ -99,10 +99,12 @@ public class UserService {
 						
 			//비밀번호 확인후 변경
 			if(!passwordEncoder.matches(dto.getUserPassword(),user.get().getUserPassword())) {
+				
 				UserEntity entity = user.get();
 				entity.setUserPassword(passwordEncoder.encode(dto.getUserPassword()));
 				repository.save(entity);
 				return true;
+				
 			}else {
 				System.out.println("변경하려는 비밀번호가 기존 비밀번호랑 똑같다");
 				return false;
@@ -116,29 +118,20 @@ public class UserService {
 	
 		
 	//userNickName 수정하기
-    public UserDTO userNickNameEdit(Long id,UserDTO dto) {
+    public boolean userNickNameEdit(Long id,UserDTO dto) {
     	
     	Optional <UserEntity> user = repository.findById(id);
     	
     	//유저 확인
-    	if(user.isPresent()) {
-    		
-    		String token = dto.getToken();
-    		UserEntity entity = user.get();
-    		
-    		if(tokenProvider.validateAndGetUserId(token).equals(user.get().getUserId())) {
-				//변경된 userNickName 저장
-    			entity.setUserNickName(dto.getUserNickName());
-        		repository.save(entity);
-        		return UserDTO.builder()
-        				.userNickName(entity.getUserNickName())
-        				.build();
-			} else {
-				return null;
-			}
-    	}else {
-    		return null;
-    	}  	
+    	if(user.isPresent() && user.get().getUserNickName() != dto.getUserNickName()) {    		
+    		UserEntity entity = user.get();    		
+			//변경된 userNickName 저장
+			entity.setUserNickName(dto.getUserNickName());
+    		repository.save(entity);
+    		return true;
+		} else {
+			return false;
+		}    	
     	
     }
     

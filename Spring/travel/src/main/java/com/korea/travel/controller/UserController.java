@@ -78,15 +78,12 @@ public class UserController {
     
     //userNickName 수정하기
     @PatchMapping("/userNickNameEdit/{id}")
-    public ResponseEntity<?> userNickNameEdit(@PathVariable Long id,@RequestBody UserDTO dto){
-    	UserDTO userDTO = service.userNickNameEdit(id,dto);
-    	if(userDTO != null) {
-    		return ResponseEntity.ok().body(userDTO);
+    public boolean userNickNameEdit(@PathVariable Long id,@RequestBody UserDTO dto){
+    	
+    	if(service.userNickNameEdit(id,dto)) {
+    		return true;
     	}else {
-    		ResponseDTO responseDTO = ResponseDTO.builder()
-                 .error("닉네임 수정 실패")
-                 .build();
-    		return ResponseEntity.badRequest().body(responseDTO);
+    		return false;
     	}
     }
     

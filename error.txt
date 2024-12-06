@@ -1,0 +1,3 @@
+토큰인증하는과정에서
+AxiosError/Network Error CORS Error 발생해서
+SecurityConfig에서 .cors()추가해서 해결함.

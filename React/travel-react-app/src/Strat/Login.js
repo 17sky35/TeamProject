@@ -5,10 +5,8 @@ import { useNavigate } from "react-router-dom";
 import TopIcon from "../TopIcon/TopIcon";
 import "../css/Strat.css";
 import axios from "axios";
-import {login} from "../api/ApiService"
-
 const Login = () => {
-  const { user,setUser } = useContext(UserContext); // `user` 배열로부터 사용자 정보를 가져옴
+  const { setUser } = useContext(UserContext); // `user` 배열로부터 사용자 정보를 가져옴
   const [loginId, setLoginId] = useState(""); // 로그인 ID 상태
   const [loginPassword, setLoginPassword] = useState(""); // 로그인 비밀번호 상태
   const navigate = useNavigate();
@@ -36,7 +34,9 @@ const Login = () => {
       });
 
       if (response.data) {
+        localStorage.setItem("ACCESS_TOKEN",response.data.token);
         setUser(response.data);
+        console.log(response.data.token)
         alert(`로그인 성공! 환영합니다, ${response.data.userNickName}님!`);
         navigate("/main"); // 메인 페이지로 이동
       } else {
