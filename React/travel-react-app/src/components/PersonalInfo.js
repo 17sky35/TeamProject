@@ -28,13 +28,36 @@ const PersonalInfo = () => {
 
   const closePopup = () => setIsOpen(false);
 
-  const handleChangePassword = () => {
+  //비밀번호변경
+  const handleChangePassword = async () => {
+
     if (newPassword === newPasswordConfirm) {
-      alert("비밀번호가 변경되었습니다.");
-      closePopup();
+      try {
+
+        const userProfile = {
+          userPassword: newPassword
+        };
+        console.log(`Bearer ${user.token}` )
+
+        const response = await axios.patch(`http://localhost:9090/travel/userPasswordEdit/${user.id}`, userProfile, {
+          headers: {
+            "Content-Type": "application/json",
+            'Authorization': `Bearer ${user.token}` 
+          },
+          withCredentials: true
+        });
+        
+        if(response.data){
+          alert("비밀번호가 변경되었습니다.");
+          closePopup();
+        }
+      } catch (err) {
+        console.error('비밀번호변경 실패:', err);
+      }
     } else {
       alert("새로운 비밀번호와 확인이 일치하지 않습니다.");
     }
+
   };
 
   const handleChangeNickname = () => {
@@ -52,6 +75,10 @@ const PersonalInfo = () => {
       const formData = new FormData();
       formData.append('file', file);
       formData.append('token', user.token);
+      
+      formData.forEach((value, key) => {
+        console.log(key, value);  // key는 'file' 또는 'token' 값이 출력됩니다.
+      });
 
       try {
         // 백엔드에 프로필 사진을 업로드

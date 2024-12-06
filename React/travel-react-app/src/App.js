@@ -8,7 +8,7 @@ import PostDetail from "./pages/PostDetail";
 import PostEdit from "./pages/PostEdit";
 import Post from "./pages/Post";
 import Map from "./pages/Map";
-import MyPage from "./components/Mypage"; // Mypage 추가
+import MyPage from "./components/MyPage"; // Mypage 추가
 import { PostContext } from "./context/PostContext";
 import { UserContext } from "./context/UserContext";
 import {PlaceContext} from "./context/PlaceContext";
@@ -39,11 +39,18 @@ function App() {
     },
   ]);
 
-  const [user, setUser] = useState({});
+  const [user, setUser] = useState(() => {
+    // 새로고침 시 로컬 스토리지에서 사용자 정보 복원
+    const savedUser = localStorage.getItem("user");
+    return savedUser ? JSON.parse(savedUser) : {};
+  });
   const [profileImage, setProfileImage] = useState(defaultImage);
   const [isWrite, setIsWrite] = useState(true)
 
-
+  useEffect(() => {
+    // user 상태가 변경될 때 로컬 스토리지에 저장
+    localStorage.setItem("user", JSON.stringify(user));
+  }, [user]);
 
   return (
     <UserContext.Provider value={{user,setUser ,profileImage, setProfileImage }}>

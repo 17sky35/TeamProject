@@ -25,13 +25,15 @@ function Signup() {
   const navigate = useNavigate();
 
   const validatePassword = (password) => {
-    const passwordRegex = /^(?=.*[!@#$%^&*(),.?":{}|<>]).{8,}$/;
-    return passwordRegex.test(password);
+    // const passwordRegex = /^(?=.*[!@#$%^&*(),.?":{}|<>]).{8,}$/;
+    // return passwordRegex.test(password);
+    return password
   };
 
   const validateEmail = (email) => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
+    // const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    // return emailRegex.test(email);
+    return email
   };
 
   const handleSubmit = async (event) => {

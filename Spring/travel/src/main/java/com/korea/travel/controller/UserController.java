@@ -3,12 +3,12 @@ package com.korea.travel.controller;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -61,15 +61,17 @@ public class UserController {
     
     //userPassword 수정하기
     @PatchMapping("/userPasswordEdit/{id}")
-    public ResponseEntity<?> userPasswordEdit(@PathVariable Long id,@RequestBody UserDTO dto){
-    	UserDTO userDTO = service.userPasswordEdit(id,dto);
-    	if(userDTO != null) {
-    		return ResponseEntity.ok().body(userDTO);
+    public boolean userPasswordEdit(@PathVariable Long id,@RequestBody UserDTO dto){
+    	
+    	// userId와 userProfile을 사용하여 비밀번호 업데이트 로직 구현
+        System.out.println("User ID: " + id);
+        System.out.println("dto : " + dto);
+
+    	
+    	if(service.userPasswordEdit(id,dto)) {
+    		return true;
     	}else {
-    		ResponseDTO responseDTO = ResponseDTO.builder()
-                 .error("비밀번호 수정 실패")
-                 .build();
-    		return ResponseEntity.badRequest().body(responseDTO);
+    		return false;
     	}
     }
     
@@ -92,11 +94,11 @@ public class UserController {
     //프로필사진 수정
     @PatchMapping("/userProfileImageEdit/{id}")
     public ResponseEntity<?> userProfileImageEdit(@PathVariable Long id, 
-    		@RequestParam("file") MultipartFile file,@RequestParam("token") String token) {
+    		@RequestParam("file") MultipartFile file,@RequestBody UserDTO dto) {
 
         try {
             // 서비스 호출하여 프로필 사진을 수정하고 결과를 반환
-            UserDTO updatedUserDTO = service.userProfileImageEdit(id, file, token);
+            UserDTO updatedUserDTO = service.userProfileImageEdit(id, file, dto);
 
             return ResponseEntity.ok().body(updatedUserDTO);  // 성공적으로 수정된 UserDTO 반환
 

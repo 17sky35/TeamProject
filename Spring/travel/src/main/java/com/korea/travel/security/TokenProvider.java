@@ -10,10 +10,8 @@ import org.springframework.stereotype.Service;
 import com.korea.travel.model.UserEntity;
 
 import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.SignatureException;
 
 @Service
 public class TokenProvider {
@@ -56,20 +54,20 @@ public class TokenProvider {
 	
 	//JWT 토큰 검증 및 유저 id 반환
 	public String validateAndGetUserId(String token) {
-		try {
-			Claims claims = Jwts.parser()
-					.setSigningKey(secretKey)
-					.parseClaimsJws(token)
-					.getBody();
-			return claims.getSubject();
-		} catch (ExpiredJwtException e) {
-	        throw new RuntimeException("Token is expired", e);  // 만료된 토큰 예외 처리
-	    } catch (SignatureException e) {
-	        throw new RuntimeException("Invalid token signature", e);  // 서명 오류 예외 처리
-	    } catch (Exception e) {
-	        throw new RuntimeException("Token validation failed", e);
-	    }
 		
+		if(!isTokenExpired(token)) {
+			try {
+				Claims claims = Jwts.parser()
+						.setSigningKey(secretKey)
+						.parseClaimsJws(token)
+						.getBody();
+				return claims.getSubject();
+			} catch (Exception e) {
+				throw new RuntimeException("Token validation failed",e);
+			}
+		}else {
+			return null;
+		}
 	}
 		
 	

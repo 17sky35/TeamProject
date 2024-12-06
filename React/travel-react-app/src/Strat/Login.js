@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import TopIcon from "../TopIcon/TopIcon";
 import "../css/Strat.css";
 import axios from "axios";
+import {login} from "../api/ApiService"
 
 const Login = () => {
   const { user,setUser } = useContext(UserContext); // `user` 배열로부터 사용자 정보를 가져옴

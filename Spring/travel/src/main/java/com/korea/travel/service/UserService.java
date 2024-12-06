@@ -91,37 +91,29 @@ public class UserService {
 	
 	
 	//userPassword 수정하기
-	public UserDTO userPasswordEdit (Long id,UserDTO dto) {
+	public boolean userPasswordEdit (Long id,UserDTO dto) {
 		
 		Optional <UserEntity> user = repository.findById(id);
 		
 		if(user.isPresent()) {
-			String token = dto.getToken();
 						
-			//토큰 만료되었는지 검증 토큰 유저id랑 받은 id랑 일치하는지 확인
-			if(!tokenProvider.isTokenExpired(token)&&tokenProvider.validateAndGetUserId(token).equals(user.get().getUserId())) {
-				//비밀번호 확인후 변경
-				if(!passwordEncoder.matches(dto.getUserPassword(),user.get().getUserPassword())) {
-					UserEntity entity = user.get();
-					entity.setUserPassword(passwordEncoder.encode(dto.getUserPassword()));
-					repository.save(entity);
-					return UserDTO.builder()
-							.userPassword(entity.getUserPassword())
-							.build();
-				}else {
-					System.out.println("변경하려는 비밀번호가 기존 비밀번호랑 똑같다");
-					return null;
-				}
-			} else {
-				return null;
+			//비밀번호 확인후 변경
+			if(!passwordEncoder.matches(dto.getUserPassword(),user.get().getUserPassword())) {
+				UserEntity entity = user.get();
+				entity.setUserPassword(passwordEncoder.encode(dto.getUserPassword()));
+				repository.save(entity);
+				return true;
+			}else {
+				System.out.println("변경하려는 비밀번호가 기존 비밀번호랑 똑같다");
+				return false;
 			}
-		}else {
-			System.out.println("User not found.");
-			return null;
+		} else {
+			return false;
 		}
 		
 	}
 		
+	
 		
 	//userNickName 수정하기
     public UserDTO userNickNameEdit(Long id,UserDTO dto) {
@@ -134,7 +126,7 @@ public class UserService {
     		String token = dto.getToken();
     		UserEntity entity = user.get();
     		
-    		if(!tokenProvider.isTokenExpired(token)&&tokenProvider.validateAndGetUserId(token).equals(user.get().getUserId())) {
+    		if(tokenProvider.validateAndGetUserId(token).equals(user.get().getUserId())) {
 				//변경된 userNickName 저장
     			entity.setUserNickName(dto.getUserNickName());
         		repository.save(entity);
@@ -152,26 +144,29 @@ public class UserService {
     
     
     //프로필사진 수정
-    public UserDTO userProfileImageEdit(Long id, MultipartFile file, String  token) {
+    public UserDTO userProfileImageEdit(Long id, MultipartFile file,UserDTO dot) {
     	
         try {
-            
+            // 1. ID로 사용자 정보 확인 (UserEntity 찾기)
             UserEntity userEntity = repository.findById(id)
                     .orElseThrow(() -> new IllegalArgumentException("User not found"));
-            
-            if(!tokenProvider.isTokenExpired(token)) {
 
-	            userEntity.setUserProfileImage(file.getOriginalFilename());
-	            repository.save(userEntity);  // UserEntity 업데이트 저장	
-	        
-	            return UserDTO.builder().
-	            		userProfileImage(userEntity.getUserProfileImage())
-	            		.build();
-	            
-            } else {
-				return null;
-			}
-            
+            // 2. 파일 경로 설정 및 저장 처리
+            String uploadDir = "uploads/profile-pictures/";
+            String filePath = uploadDir + "user_" + id + "_" + file.getOriginalFilename();
+            File dest = new File(filePath);
+            dest.getParentFile().mkdirs();  // 디렉토리가 없으면 생성
+            file.transferTo(dest);  // 파일 저장
+
+            // 3. UserEntity에 프로필 사진 경로 업데이트
+            userEntity.setUserProfileImage(filePath);
+            repository.save(userEntity);  // UserEntity 업데이트 저장
+
+            // 4. 업데이트된 UserEntity를 UserDTO로 변환하여 반환
+            return UserDTO.builder().
+            		userProfileImage(userEntity.getUserProfileImage())
+            		.build();
+
         } catch (IOException e) {
             // 파일 저장 오류 처리
             throw new RuntimeException("프로필 사진 업로드 중 오류가 발생했습니다.", e);
