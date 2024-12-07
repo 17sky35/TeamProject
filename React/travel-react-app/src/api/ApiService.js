@@ -2,13 +2,11 @@ import axios from "axios";
 
 export async function call(api,method,request,user){
 
-    let headers = new Headers({
-        "Content-Type": "application/json"
-    })
+    let headers = {"Content-Type": "application/json"};
 
-    //user.token 이 존재하면
+    //사용자 토큰이 있다면 Authorization 헤더에 추가
     if(user.token && user.token !== null){
-        headers.append("Authorization", `Bearer ${user.token}`);
+        headers["Authorization"] = `Bearer ${user.token}`;
     }
 
     try {
@@ -19,17 +17,17 @@ export async function call(api,method,request,user){
             data: request,
             headers: headers
         });
-
+        
         if (response) {
+            console.log(response.data);
             return response.data;
-        } else {
-            return false;
-
         }
         
     } catch (error) {
         console.error('API 호출 중 오류 발생', error);
+        window.location.href="/main";
         return false;
     }
+    
 
 }//call

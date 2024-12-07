@@ -8,6 +8,7 @@ import '../css/MyPage_per.css'; // CSS 파일 import
 import { IoPencil } from "react-icons/io5";
 import { FaRegTrashAlt } from "react-icons/fa";
 import axios from "axios";
+import { call } from "../api/ApiService";
 
 Modal.setAppElement('#root');
 
@@ -28,19 +29,42 @@ const PersonalInfo = () => {
 
   const closePopup = () => setIsOpen(false);
 
+  //비밀번호변경
   const handleChangePassword = () => {
+
     if (newPassword === newPasswordConfirm) {
-      alert("비밀번호가 변경되었습니다.");
-      closePopup();
+      try {
+
+        const userProfile = {
+          userPassword: newPassword
+        };
+        console.log(user.token)
+
+        call(`/travel/userPasswordEdit/${user.id}`,"PATCH",userProfile,user)
+        .then(()=>{
+          alert("비밀번호가 변경되었습니다.");
+          closePopup();
+        })
+        .catch(error=>{
+          console.error('비밀번호변경 실패:', error);
+        })
+        
+      } catch (err) {
+        console.error('비밀번호변경 실패:', err);
+      }
     } else {
       alert("새로운 비밀번호와 확인이 일치하지 않습니다.");
     }
+
   };
 
+  //닉네임변경 버튼
   const handleChangeNickname = () => {
     alert("닉네임이 변경되었습니다.");
     closePopup();
   };
+
+
 
   const handleProfileImageChange = async(e) => {
 
