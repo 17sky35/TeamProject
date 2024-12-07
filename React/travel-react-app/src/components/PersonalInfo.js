@@ -33,25 +33,27 @@ const PersonalInfo = () => {
   const handleChangePassword = () => {
 
     if (newPassword === newPasswordConfirm) {
-      try {
 
-        const userProfile = {
-          userPassword: newPassword
-        };
-        console.log(user.token)
+      const userProfile = {
+        userPassword: newPassword
+      };
+      
+      console.log(user.token)
 
-        call(`/travel/userPasswordEdit/${user.id}`,"PATCH",userProfile,user)
-        .then(()=>{
+      call(`/travel/userPasswordEdit/${user.id}`,"PATCH",userProfile,user)
+      .then(response=>{
+        if(response){
           alert("비밀번호가 변경되었습니다.");
           closePopup();
-        })
-        .catch(error=>{
-          console.error('비밀번호변경 실패:', error);
-        })
+        }else{
+          alert("비밀번호변경 실패");
+          closePopup();
+        }
+      })
+      .catch(error=>{
+        console.error('비밀번호변경 실패:', error);
+      })
         
-      } catch (err) {
-        console.error('비밀번호변경 실패:', err);
-      }
     } else {
       alert("새로운 비밀번호와 확인이 일치하지 않습니다.");
     }
