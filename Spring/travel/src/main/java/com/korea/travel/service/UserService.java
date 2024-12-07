@@ -30,6 +30,20 @@ public class UserService {
 	private final TokenProvider tokenProvider;
 	
 	
+	//userId가 있는지 조회
+	public boolean getUsers(String userId) {
+		
+		UserEntity entity = repository.findByUserId(userId);
+		//중복되는 userId가 없으면 true
+		if(entity == null) {
+			return true;
+		}else{
+			return false;
+		}
+		
+	}
+	
+	
 	//회원가입
 	public UserDTO signup(UserDTO dto) {
 		
@@ -147,7 +161,13 @@ public class UserService {
             // 2. 파일 경로 설정 및 저장 처리
             String uploadDir = "uploads/profile-pictures/";
             String filePath = uploadDir + "user_" + id + "_" + file.getOriginalFilename();
+            
+            System.out.println(filePath);
+            
             File dest = new File(filePath);
+            
+            System.out.println(dest);
+            
             dest.getParentFile().mkdirs();  // 디렉토리가 없으면 생성
             file.transferTo(dest);  // 파일 저장
 
