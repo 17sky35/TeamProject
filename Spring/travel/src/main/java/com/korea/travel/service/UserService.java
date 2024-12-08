@@ -7,6 +7,7 @@ import java.util.Optional;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.korea.travel.dto.UserDTO;
@@ -151,35 +152,38 @@ public class UserService {
     
     
     //프로필사진 수정
+    @Transactional
     public UserDTO userProfileImageEdit(Long id, MultipartFile file) {
     	
         try {
             // 1. ID로 사용자 정보 확인 (UserEntity 찾기)
             UserEntity userEntity = repository.findById(id)
                     .orElseThrow(() -> new IllegalArgumentException("User not found"));
-
             // 2. 파일 경로 설정 및 저장 처리
             String uploadDir = "uploads/profile-pictures/";
             String filePath = uploadDir + "user_" + id + "_" + file.getOriginalFilename();
             
             System.out.println(filePath);
             
-            File dest = new File(filePath);
+            File dest = new File(filePath);            
+            File parentDir = dest.getParentFile();
+            if (!parentDir.exists()) {
+                parentDir.mkdirs();  // 디렉토리 생성
+            }
             
-            System.out.println(dest);
-            
-            dest.getParentFile().mkdirs();  // 디렉토리가 없으면 생성
             file.transferTo(dest);  // 파일 저장
 
             // 3. UserEntity에 프로필 사진 경로 업데이트
             userEntity.setUserProfileImage(filePath);
             repository.save(userEntity);  // UserEntity 업데이트 저장
-
+            
+            System.out.println(userEntity.getUserNickName());
+            System.out.println(userEntity.getUserProfileImage());
             // 4. 업데이트된 UserEntity를 UserDTO로 변환하여 반환
             return UserDTO.builder().
             		userProfileImage(userEntity.getUserProfileImage())
             		.build();
-
+            
         } catch (IOException e) {
             // 파일 저장 오류 처리
             throw new RuntimeException("프로필 사진 업로드 중 오류가 발생했습니다.", e);

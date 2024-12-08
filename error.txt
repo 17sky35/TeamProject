@@ -1,3 +1,10 @@
-토큰인증하는과정에서
-AxiosError/Network Error CORS Error 발생해서
-SecurityConfig에서 .cors()추가해서 해결함.
+로그인시 
+401error AxiosError/Network Error CORS Error 발생
+react에서 spring boot로 data넘어가는지 확인
+react에서 넘어간 데이터가 브라우저 네트워크 탭 header에까지는 넘어가는데
+spring boot로 data가 넘어오지않아서 검색해보니까 토큰인증과정 error
+SecurityConfig에서 .cors()추가하니까 해결됨
+
+-------------------------------------------------------------------------------------
+
+

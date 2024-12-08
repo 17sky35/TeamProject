@@ -132,7 +132,7 @@ const PersonalInfo = () => {
         <div className="ProfileWrapper ">
           <img
             className="ProfileImage"
-            src={profileImage}
+            src={user.userProfileImage}
             alt="profile"
           />
           <div style={{display:"flex" }}>

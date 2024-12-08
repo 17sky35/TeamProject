@@ -114,8 +114,7 @@ public class UserController {
     
     //프로필사진 수정
     @PatchMapping("/userProfileImageEdit/{id}")
-    public ResponseEntity<?> userProfileImageEdit(@PathVariable Long id, 
-    		@RequestParam("file") MultipartFile file) {
+    public ResponseEntity<?> userProfileImageEdit(@PathVariable Long id, @RequestParam("file") MultipartFile file) {
     	
     	System.out.println(file);
         try {
