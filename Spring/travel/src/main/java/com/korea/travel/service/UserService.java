@@ -151,7 +151,7 @@ public class UserService {
     
     
     //프로필사진 수정
-    public UserDTO userProfileImageEdit(Long id, MultipartFile file,UserDTO dot) {
+    public UserDTO userProfileImageEdit(Long id, MultipartFile file) {
     	
         try {
             // 1. ID로 사용자 정보 확인 (UserEntity 찾기)

@@ -40,6 +40,7 @@ const PersonalInfo = () => {
       
       console.log(user.token)
 
+      //call메서드 사용해서 백엔드 요청
       call(`/travel/userPasswordEdit/${user.id}`,"PATCH",userProfile,user)
       .then(response=>{
         if(response){
@@ -68,7 +69,7 @@ const PersonalInfo = () => {
 
 
 
-  const handleProfileImageChange = async(e) => {
+  const handleProfileImageChange = async (e) => {
 
     const file = e.target.files[0];
 
@@ -77,17 +78,19 @@ const PersonalInfo = () => {
       // FormData 객체를 사용해 파일과 기타 데이터를 전송
       const formData = new FormData();
       formData.append('file', file);
-      formData.append('token', user.token);
+      console.log(formData.get('file'))
 
       try {
         // 백엔드에 프로필 사진을 업로드
         const response = await axios.patch(`http://localhost:9090/travel/userProfileImageEdit/${user.id}`, formData, {
           headers: {
+            "Content-Type": "multipart/form-data",
             'Authorization': `Bearer ${user.token}`
           },
         });
         
         if(response.data){
+          console.log(response.data)
           //성공적으로 업로드되면 사용자 정보 업데이트
           setUser(response.data);
         }
@@ -95,6 +98,7 @@ const PersonalInfo = () => {
       } catch (err) {
         console.error('파일 업로드 실패:', err);
       }
+    
     }//if문 종료
 
   };

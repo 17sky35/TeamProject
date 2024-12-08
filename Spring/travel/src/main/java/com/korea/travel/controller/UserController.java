@@ -115,11 +115,12 @@ public class UserController {
     //프로필사진 수정
     @PatchMapping("/userProfileImageEdit/{id}")
     public ResponseEntity<?> userProfileImageEdit(@PathVariable Long id, 
-    		@RequestParam("file") MultipartFile file,@RequestBody UserDTO dto) {
-
+    		@RequestParam("file") MultipartFile file) {
+    	
+    	System.out.println(file);
         try {
             // 서비스 호출하여 프로필 사진을 수정하고 결과를 반환
-            UserDTO updatedUserDTO = service.userProfileImageEdit(id, file, dto);
+            UserDTO updatedUserDTO = service.userProfileImageEdit(id, file);
 
             return ResponseEntity.ok().body(updatedUserDTO);  // 성공적으로 수정된 UserDTO 반환
 
