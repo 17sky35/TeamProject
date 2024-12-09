@@ -20,7 +20,10 @@ const PersonalInfo = () => {
   const [newPassword, setNewPassword] = useState("");
   const [newPasswordConfirm, setNewPasswordConfirm] = useState("");
   const [userNickname, setUserNickname] = useState('길동');
-  const { user, setUser,profileImage, setProfileImage  } = useContext(UserContext);
+  const { user, setUser } = useContext(UserContext);
+
+
+  const profileImage = user.userProfileImage ? user.userProfileImage : defaultImage;
 
   const openPopup = (type) => {
     setCurrentPopup(type);
@@ -79,12 +82,11 @@ const PersonalInfo = () => {
       const formData = new FormData();
       formData.append('file', file);
       console.log(formData.get('file'))
-
       try {
         // 백엔드에 프로필 사진을 업로드
         const response = await axios.patch(`http://localhost:9090/travel/userProfileImageEdit/${user.id}`, formData, {
           headers: {
-            "Content-Type": "multipart/form-data",
+            'Content-Type': 'multipart/form-data',
             'Authorization': `Bearer ${user.token}`
           },
         });
@@ -92,7 +94,11 @@ const PersonalInfo = () => {
         if(response.data){
           console.log(response.data)
           //성공적으로 업로드되면 사용자 정보 업데이트
-          setUser(response.data);
+          setUser(prevUser => ({
+            ...prevUser,  // 기존 데이터 유지
+            userProfileImage: response.data.userProfileImage // 새로 받은 userProfileImage로 업데이트
+          }));
+          console.log(user)
         }
 
       } catch (err) {
@@ -132,7 +138,7 @@ const PersonalInfo = () => {
         <div className="ProfileWrapper ">
           <img
             className="ProfileImage"
-            src={user.userProfileImage}
+            src={profileImage}
             alt="profile"
           />
           <div style={{display:"flex" }}>

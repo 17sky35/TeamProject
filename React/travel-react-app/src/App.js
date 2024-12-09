@@ -8,7 +8,7 @@ import PostDetail from "./pages/PostDetail";
 import PostEdit from "./pages/PostEdit";
 import Post from "./pages/Post";
 import Map from "./pages/Map";
-import MyPage from "./components/Mypage"; // Mypage 추가
+import MyPage from "./components/MyPage"; // Mypage 추가
 import { PostContext } from "./context/PostContext";
 import { UserContext } from "./context/UserContext";
 import {PlaceContext} from "./context/PlaceContext";

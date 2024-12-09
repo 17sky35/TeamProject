@@ -7,4 +7,20 @@ SecurityConfig에서 .cors()추가하니까 해결됨
 
 -------------------------------------------------------------------------------------
 
+프로필이미지 변경기능에서
+401error
+토큰 인증 문제로
+securityFilterChain에서
+.requestMatchers("/uploads/**").permitAll()추가했더니 
+403error
+webConfig에서
+클라잉너트가 /uploads/**결로로 요청하면 서버는 해당요청을 
+"file:" + System.getProperty("user.dir") + "/uploads/"찾아 반환하게 만들어줘서 해결
+@Override
+public void addResourceHandlers(ResourceHandlerRegistry registry) {
+     registry.addResourceHandler("/uploads/**")
+          .addResourceLocations("file:" + System.getProperty("user.dir") + "/uploads/");
+}
+
+-------------------------------------------------------------------------------------
 

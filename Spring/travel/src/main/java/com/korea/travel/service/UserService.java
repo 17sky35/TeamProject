@@ -160,25 +160,32 @@ public class UserService {
             UserEntity userEntity = repository.findById(id)
                     .orElseThrow(() -> new IllegalArgumentException("User not found"));
             // 2. 파일 경로 설정 및 저장 처리
-            String uploadDir = "uploads/profile-pictures/";
-            String filePath = uploadDir + "user_" + id + "_" + file.getOriginalFilename();
-            
-            System.out.println(filePath);
-            
+            String uploadDir = System.getProperty("user.dir") + "/uploads/profilePictures/";
+            String fileName = file.getOriginalFilename().replaceAll("[\\s\\(\\)]", "_");
+            String filePath = uploadDir + id + "_" + fileName;
+                        
             File dest = new File(filePath);            
             File parentDir = dest.getParentFile();
             if (!parentDir.exists()) {
-                parentDir.mkdirs();  // 디렉토리 생성
+            	parentDir.mkdirs();  // 디렉토리 생성
             }
             
-            file.transferTo(dest);  // 파일 저장
-
+            
+            try {
+                file.transferTo(dest);
+                System.out.println("파일저장완료");
+            } catch (IOException e) {
+                System.err.println("파일 저장 실패: " + e.getMessage());
+                e.printStackTrace();  // 스택 트레이스 출력
+                throw new RuntimeException("파일 저장 중 오류가 발생했습니다.", e);
+            }
+            
+            String fileUrl = "http://localhost:9090/uploads/profilePictures/" + id + "_" + fileName;
+            
             // 3. UserEntity에 프로필 사진 경로 업데이트
-            userEntity.setUserProfileImage(filePath);
+            userEntity.setUserProfileImage(fileUrl);
             repository.save(userEntity);  // UserEntity 업데이트 저장
             
-            System.out.println(userEntity.getUserNickName());
-            System.out.println(userEntity.getUserProfileImage());
             // 4. 업데이트된 UserEntity를 UserDTO로 변환하여 반환
             return UserDTO.builder().
             		userProfileImage(userEntity.getUserProfileImage())

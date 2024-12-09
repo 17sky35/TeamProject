@@ -67,7 +67,7 @@ public class UserController {
     public ResponseEntity<?> authenticate(@RequestBody UserDTO dto) {
     	
         UserDTO userDTO = service.getByCredentials(dto.getUserId(), dto.getUserPassword());
-        
+                
         if(userDTO != null) {
         	return ResponseEntity.ok().body(userDTO);
         }else {
@@ -116,11 +116,11 @@ public class UserController {
     @PatchMapping("/userProfileImageEdit/{id}")
     public ResponseEntity<?> userProfileImageEdit(@PathVariable Long id, @RequestParam("file") MultipartFile file) {
     	
-    	System.out.println(file);
+    	System.out.println("file: " +file);
         try {
             // 서비스 호출하여 프로필 사진을 수정하고 결과를 반환
             UserDTO updatedUserDTO = service.userProfileImageEdit(id, file);
-
+            System.out.println("updateDTO : " +updatedUserDTO);
             return ResponseEntity.ok().body(updatedUserDTO);  // 성공적으로 수정된 UserDTO 반환
 
         } catch (RuntimeException e) {
