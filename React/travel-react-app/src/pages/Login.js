@@ -63,6 +63,7 @@ const Login = () => {
   const handleKakaoFailure = (error) => {
     console.log('카카오 로그인 실패', error);
     alert('카카오 로그인 실패');
+
   };
 
   return (
@@ -122,7 +123,7 @@ const Login = () => {
           </div>
         </form>
 
-        <div>
+        <div >
           <img src={logo2} alt="Logo" className="logo-box" />
         </div>
       </main>

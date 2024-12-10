@@ -1,6 +1,7 @@
 import React, { useState, useContext } from "react";
 import { UserContext } from "../context/UserContext";
 import { useNavigate } from "react-router-dom";
+import {call} from "../api/ApiService"
 import axios from "axios";
 import "../css/Strat.css";
 import logo2 from '../image/logo2.JPG'
