@@ -13,13 +13,13 @@ import defaultImage from '../image/defaultImage.png';
 const TopIcon = () => {
   const [isProfileDropdownVisible, setIsProfileDropdownVisible] = useState(false);
   const [isMyInfoVisible, setIsMyInfoVisible] = useState(false); // Collapse 상태 관리
-  const { user,profileImage } = useContext(UserContext); // userNickName 가져오기
+  const { user } = useContext(UserContext); // userNickName 가져오기
   const navigate = useNavigate();
 
   const iconComponents = [
-    { id: "home", component: <SlHome />, route: "/main" },
-    { id: "map", component: <IoMapOutline />, route: "/map" },
-    { id: "post", component: <MdNoteAlt />, route: "/post" },
+    { id: "home", component: <SlHome size={30} />, route: "/main", label: "Home"},
+    { id: "map", component: <IoMapOutline size={30} />, route: "/map",label: "Map" },
+    { id: "post", component: <MdNoteAlt size={35} />, route: "/post",label: "Post" },
   ];
 
   //로그아웃 버튼
@@ -39,22 +39,32 @@ const TopIcon = () => {
       {/* 아이콘 영역 */}
       <div
         className="icon-container"
-        style={{ display: "flex", alignItems: "center", gap: "15px" }}
+        style={{ display: "flex", alignItems: "center", gap: "15px", position: "relative" }}
       >
         {iconComponents.map((icon) => (
           <div
             key={icon.id}
             className="icon"
-            style={{ cursor: "pointer" }}
+            style={{
+              cursor: "pointer",
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              position: "relative"
+            }}
             onClick={() => navigate(icon.route)}
           >
             {icon.component}
+            {/* 텍스트 부분 */}
+            <span className="tooltip" style={{fontSize:"16px"}} >
+              {icon.label}
+            </span>
           </div>
         ))}
       </div>
 
       {/* 프로필 영역 */}
-      <div className="profile-container" style={{ position: "relative", marginLeft: "20px" }}>
+      <div className="profile-container" style={{ position: "relative"}}>
         <div
           style={{
             display: "flex",
@@ -74,7 +84,13 @@ const TopIcon = () => {
             }}
             src={user.userProfileImage || defaultImage}
             alt="profile"
-            onClick={() => setIsProfileDropdownVisible(!isProfileDropdownVisible)}
+            onClick={() => {
+              if(isProfileDropdownVisible){
+                setIsMyInfoVisible(false)
+              }
+              setIsProfileDropdownVisible(!isProfileDropdownVisible)
+            
+            }}
           />
           <div
             style={{
@@ -93,7 +109,7 @@ const TopIcon = () => {
               }}
               className="sliding-text"
             >
-              시골쥐 {user.userNickName || "홍길동"}님
+              시골쥐 {user.userNickName || "시골쥐"}님
             </p>
           </div>
         </div>
@@ -121,12 +137,12 @@ const TopIcon = () => {
                 border: "none",
                 borderRadius: "5px",
               }}
-              onClick={() => setIsMyInfoVisible(!isMyInfoVisible)}
+              onClick={() =>setIsMyInfoVisible(!isMyInfoVisible)}
             >
               My Info
             </button>
             <Collapse in={isMyInfoVisible}>
-            <div style={{ height: 'auto' }}>
+              <div style={{ height: 'auto' }}>
                 <PersonalInfo /> {/* PersonalInfo 컴포넌트를 보이도록 렌더링 */}
               </div>
             </Collapse>
