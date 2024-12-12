@@ -13,7 +13,7 @@ import defaultImage from '../image/defaultImage.png';
 const TopIcon = () => {
   const [isProfileDropdownVisible, setIsProfileDropdownVisible] = useState(false);
   const [isMyInfoVisible, setIsMyInfoVisible] = useState(false); // Collapse 상태 관리
-  const { user,profileImage, userNickName } = useContext(UserContext); // userNickName 가져오기
+  const { user,profileImage } = useContext(UserContext); // userNickName 가져오기
   const navigate = useNavigate();
 
   const iconComponents = [
@@ -72,7 +72,7 @@ const TopIcon = () => {
               borderRadius: "50%",
               cursor: "pointer"
             }}
-            src={profileImage || defaultImage}
+            src={user.userProfileImage || defaultImage}
             alt="profile"
             onClick={() => setIsProfileDropdownVisible(!isProfileDropdownVisible)}
           />
@@ -87,12 +87,13 @@ const TopIcon = () => {
             <p
               style={{
                 display: "inline-block", // 텍스트가 슬라이드될 수 있도록 인라인 블록 설정
-                animation: "slide 10s linear infinite", // 슬라이드 애니메이션
-                fontSize:"20px"
+                animation: "slide 15s linear infinite", // 슬라이드 애니메이션
+                fontSize:"20px",
+                color:"#42a5f5"
               }}
               className="sliding-text"
             >
-              {user.userNickName || "홍길동"}
+              시골쥐 {user.userNickName || "홍길동"}님
             </p>
           </div>
         </div>
@@ -102,7 +103,7 @@ const TopIcon = () => {
             style={{
               width:isMyInfoVisible?"400px":"200px",
               position: "absolute",
-              top: "100px",
+              top: "120px",
               right: "0",
               backgroundColor: "#fff",
               padding: "10px",
