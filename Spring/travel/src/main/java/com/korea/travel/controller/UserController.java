@@ -77,6 +77,23 @@ public class UserController {
         
     }
     
+    //Id찾기
+    @PostMapping("/userFindId")
+    public ResponseEntity<?> userFindId(@RequestBody UserDTO dto){
+    	
+    	UserDTO user = service.userFindId(dto);
+    	
+    	if(user != null) {
+    		return ResponseEntity.ok().body(user);
+    	}else {
+        	ResponseDTO responseDTO = ResponseDTO.builder()
+        			.error("ID를 찾을수없습니다.")
+        			.build();
+        	return ResponseEntity.badRequest().body(responseDTO);
+        }
+    	
+    }
+    
     
     //userPassword 수정하기
     @PatchMapping("/userPasswordEdit/{id}")
