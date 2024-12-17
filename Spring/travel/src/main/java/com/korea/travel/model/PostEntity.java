@@ -1,8 +1,8 @@
 package com.korea.travel.model;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
+import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
@@ -40,9 +40,13 @@ public class PostEntity {
     private String userNickname;
     
     @ElementCollection
+    @CollectionTable(name = "post_places", joinColumns = @JoinColumn(name = "post_id"))
+    @Column(name = "place_list")
     private List<String> placeList;
     
     @ElementCollection
+    @CollectionTable(name = "post_images", joinColumns = @JoinColumn(name = "post_id"))
+    @Column(name = "image_urls")
     private List<String> imageUrls;
     
     private String thumbnail;

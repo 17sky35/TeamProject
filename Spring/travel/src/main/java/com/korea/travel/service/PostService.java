@@ -37,8 +37,12 @@ public class PostService {
     // 게시글 한 건 조회
     public PostDTO getPostById(Long id) {
         Optional<PostEntity> board = postRepository.findById(id);
-        return board.map(this::convertToDTO)
-                .orElseThrow(() -> new RuntimeException("게시글을 찾을 수 없습니다."));
+        if(board.isPresent()) {
+        	return board.map(this::convertToDTO)
+                    .orElseThrow(() -> new RuntimeException("게시글을 찾을 수 없습니다."));
+        }else {
+        	throw new RuntimeException("게시글을 찾을 수 없습니다.");
+		}
     }
 
     // 게시글 생성
