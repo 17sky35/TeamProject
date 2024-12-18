@@ -82,7 +82,8 @@ const Write = () => {
             for (let [key, value] of formData.entries()) {
                 console.log(key, value);
             }
-            const response = await axios.post("http://localhost:9090/api/write", formData, {
+            
+            const response = await axios.post(`http://192.168.3.24:9090/api/write/${user.id}`, formData, {
                 headers: { 
                     "Content-Type": "multipart/form-data" ,
                     'Authorization': `Bearer ${user.token}`
@@ -103,7 +104,7 @@ const Write = () => {
         }
     };
 
-    // 취소 버튼 핸들러`````````````````````````````
+    // 취소 버튼 핸들러
     const handleCancel = () => {
         setPostTitle("");
         setPostContent("");
@@ -207,7 +208,7 @@ const Write = () => {
                 <Button
                     variant="outlined"
                     color="error"
-                    onClick={() => navigate("/post")}
+                    onClick={handleCancel}
                 >
                     취 소
                 </Button>

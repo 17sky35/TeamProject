@@ -2,14 +2,16 @@ import React, { useContext, useState, useEffect } from "react";
 import { TextField, Button } from "@mui/material";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
-import { ListContext } from "../context/ListContext";
 import { UserContext } from "../context/UserContext";
+import { Delete } from "@mui/icons-material";
 import TopIcon from "../TopIcon/TopIcon";
+import { CopyListContext } from "../context/CopyListContext";
+import { CopyPlaceListContext } from "../context/CopyPlaceListContext";
 
 const PostEdit = () => {
     const { user } = useContext(UserContext);
-    const { list, setList } = useContext(ListContext);
-    const [placeList, setPlaceList] = useState([]);
+    const { copyList, setCopyList } = useContext(CopyListContext);
+    const {copyPlaceList, setCopyPlaceList} = useContext(CopyPlaceListContext);
     const [postTitle, setPostTitle] = useState("");
     const [postContent, setPostContent] = useState("");
     const [selectedFiles, setSelectedFiles] = useState([]); 
@@ -33,11 +35,11 @@ const PostEdit = () => {
                 setExistingImageUrls(postData.imageUrls || []);
                 
                 // 여행지 리스트 설정
-                if (postData.placeList) {
-                    setPlaceList(postData.placeList);
-                    console.log(postData.placeList)
+                setCopyPlaceList(postData.placeList);
+                setCopyList(postData.placeList)
+                console.log(postData.placeList)
                     
-                }
+                
             } catch (error) {
                 console.error("게시글 정보 불러오기 실패:", error);
                 alert("게시글 정보를 불러오는 중 오류가 발생했습니다.");
@@ -45,7 +47,7 @@ const PostEdit = () => {
         };
 
         fetchPostDetails();
-    }, [id, user.token, setList]);
+    }, [id, user.token, setCopyList]);
 
     // 파일 추가 핸들러
     const handleAddImages = (e) => {
@@ -104,7 +106,7 @@ const PostEdit = () => {
         formData.append("postTitle", postTitle);
         formData.append("postContent", postContent);
         formData.append("userNickName", user.userNickName);
-        formData.append("placeList", list?.join(", ") || ""); // 빈 문자열로 기본값 설정
+        formData.append("placeList", copyList?.join(", ") || ""); // 빈 문자열로 기본값 설정
         
         formData.append("existingImageUrls", JSON.stringify(existingImageUrls));
 
@@ -118,7 +120,7 @@ const PostEdit = () => {
         }
 
         try {
-            const response = await axios.put(`http://localhost:9090/api/posts/postEdit/${id}`, formData, {
+            const response = await axios.put(`http://192.168.3.24:9090/api/posts/postEdit/${id}`, formData, {
                 headers: { 
                     "Content-Type": "multipart/form-data",
                     'Authorization': `Bearer ${user.token}`
@@ -131,133 +133,126 @@ const PostEdit = () => {
             console.error("Error updating post:", error.response?.data || error.message);
             alert(
                 `수정 중 오류가 발생했습니다: ${
-            error.response?.data?.message || "서버와의 통신에 실패했습니다."
-        }`
-    )
+                error.response?.data?.message || "서버와의 통신에 실패했습니다."
+                }`
+            )
+        };
+    }
+
+    // 취소 버튼 핸들러
+    const handleCancel = () => {
+        if (window.confirm("수정을 취소하시겠습니까?")) {
+            alert("수정이 취소되었습니다.");
+            navigate("/post");
+        }
     };
-}
 
     return (
-        <div className="post-edit">
-            <div>
-                <TopIcon />
+        <div className="write">
+            <div className="write_h1">
+                <h1>글쓰기</h1>
             </div>
-            <h1>글 수정</h1>
 
             {/* 제목 입력 */}
-            <TextField
-                fullWidth
-                variant="outlined"
-                label="제목"
-                value={postTitle}
-                onChange={(e) => setPostTitle(e.target.value)}
-                placeholder="제목을 입력하세요."
-                style={{ marginBottom: "20px" }}
-            />
+            <div>
+                <TextField
+                    fullWidth
+                    variant="outlined"
+                    label="제목"
+                    value={postTitle}
+                    onChange={(e) => {setPostTitle(e.target.value)}}
+                    placeholder="제목을 입력하세요."
+                />
+            </div>
 
             {/* 작성자 표시 */}
-            <TextField
-                InputProps={{ readOnly: true }}
-                label="작성자"
-                fullWidth
-                variant="outlined"
-                value={user.userNickName || "알 수 없는 사용자"}
-                style={{ marginBottom: "20px" }}
-            />
+            <div>
+                <TextField
+                    InputProps={{ readOnly: true }}
+                    label="작성자"
+                    fullWidth
+                    variant="outlined"
+                    value={user.userNickName || "알 수 없는 사용자"}
+                />
+            </div>
 
             {/* 여행지 표시 */}
-            <TextField
-                inputProps={{ readOnly: true }}
-                fullWidth
-                variant="outlined"
-                label="여행지"
-                value={list.join(", ")}
-                multiline
-                rows={2}
-                style={{ marginBottom: "20px" }}
-            />
+            <div>
+                <TextField
+                    inputProps={{readOnly: true}}
+                    fullWidth
+                    variant="outlined"
+                    label="여행지"
+                    value={copyList.join(", ")}
+                    multiline
+                    rows={2}
+                />
+            </div>
 
             {/* 내용 입력 */}
-            <TextField
-                fullWidth
-                variant="outlined"
-                label="내용"
-                value={postContent}
-                onChange={(e) => setPostContent(e.target.value)}
-                placeholder="내용을 입력하세요."
-                multiline
-                rows={8}
-                style={{ marginBottom: "20px" }}
-            />
+            <div>
+                <TextField
+                    fullWidth
+                    variant="outlined"
+                    label="내용"
+                    value={postContent}
+                    onChange={(e) => {setPostContent(e.target.value)}}
+                    placeholder="내용을 입력하세요."
+                    multiline
+                    rows={7}
+                />
+            </div>
 
             {/* 이미지 업로드 */}
             <div className="photo_style">
                 <label htmlFor="input-file" className="input-file-label">
-                    <input
-                        type="file"
-                        accept=".png, .jpg, .jpeg, .gif"
-                        id="input-file"
-                        multiple
-                        onChange={handleAddImages}
-                    />
-                    <span>사진 추가</span>
+                    사진추가
                 </label>
-
-                {/* 기존 이미지 미리보기 */}
+                <input 
+                    type="file" 
+                    accept=".png, .jpg, .jpeg, .gif" 
+                    id="input-file" 
+                    multiple 
+                    onChange={handleAddImages} 
+                />
+                {/* 저장해둔 이미지들을 순회하면서 화면에 이미지 출력 */}
                 <div className="image-grid">
                     {existingImageUrls.map((url, index) => (
-                        <div key={`existing-${index}`} style={{ position: "relative" }}>
+                        <div key={`existing-${index}`}>
                             <img 
-                                src={url} 
-                                alt={`existing-${index}`} 
-                                style={{ width: "150px", height: "150px", objectFit: "cover" }} 
+                                src={`http://192.168.3.24:9090${url}`} 
+                                alt={`existing-${index}`}
                             />
-                            <Button 
-                                variant="outlined" 
-                                color="error" 
-                                onClick={() => handleDeleteImage(index, true)}
-                            >
-                                삭제
-                            </Button>
+                            <Delete onClick={() => handleDeleteImage(index)} />
                         </div>
                     ))}
-
-                    {/* 새로 추가된 이미지 미리보기 */}
                     {previewUrls.map((url, index) => (
-                        <div key={`new-${index}`} style={{ position: "relative" }}>
+                        <div key={index}>
                             <img 
                                 src={url} 
-                                alt={`preview-${index}`} 
-                                style={{ width: "150px", height: "150px", objectFit: "cover" }} 
+                                alt={`preview-${index}`}
                             />
-                            <Button 
-                                variant="outlined" 
-                                color="error" 
-                                onClick={() => handleDeleteImage(index)}
-                            >
-                                삭제
-                            </Button>
+                            <Delete onClick={() => handleDeleteImage(index)} />
                         </div>
                     ))}
                 </div>
             </div>
 
-            {/* 버튼 */}
-            <div className="edit-buttons">
-                <Button 
-                    variant="contained" 
-                    color="primary" 
-                    onClick={handleSave} 
-                    style={{ marginRight: "10px" }}
+            {/* 저장/취소 버튼 */}
+            <div className="write-buttons">
+                <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={handleSave}
                 >
-                    수정
+                    저 장
                 </Button>
-                <Button 
-                    variant="outlined" 
-                    color="error" 
-                    onClick={() => navigate(`/PostDetail/${id}`)}
+                <Button
+                    variant="outlined"
+                    color="error"
+                    onClick={handleCancel}
                 >
-                    취소
+                    취 소
                 </Button>
             </div>
         </div>

@@ -3,6 +3,7 @@ package com.korea.travel.service;
 import com.korea.travel.dto.PostDTO;
 import com.korea.travel.model.PostEntity;
 import com.korea.travel.persistence.PostRepository;
+import com.korea.travel.persistence.UserRepository;
 
 import lombok.RequiredArgsConstructor;
 
@@ -23,6 +24,8 @@ public class PostService {
 
 	@Autowired
     private PostRepository postRepository;
+	
+	
 
     @Value("${file.upload-dir}") // 파일 저장 경로 설정
     private String uploadDir;
@@ -33,6 +36,15 @@ public class PostService {
                 .map(this::convertToDTO)
                 .collect(Collectors.toList());
     }
+    
+    // 마이 게시판 조회
+    public List<PostDTO> getMyPosts(Long id) {
+    	
+        return postRepository.findAll().stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
+    }
+    
 
     // 게시글 한 건 조회
     public PostDTO getPostById(Long id) {
@@ -104,12 +116,12 @@ public class PostService {
     private PostDTO convertToDTO(PostEntity entity) {
         return PostDTO.builder()
                 .postId(entity.getPostId())
+                .userId(entity.getUserEntity().getId())
                 .postTitle(entity.getPostTitle())
                 .postContent(entity.getPostContent())
                 .userNickname(entity.getUserNickname())
                 .placeList(entity.getPlaceList())
                 .imageUrls(entity.getImageUrls())
-                .thumbnail(entity.getThumbnail())
                 .likes(entity.getLikes())
                 .postCreatedAt(entity.getPostCreatedAt())
                 .build();
@@ -122,9 +134,9 @@ public class PostService {
                 .userNickname(dto.getUserNickname())
                 .placeList(dto.getPlaceList())
                 .imageUrls(dto.getImageUrls())
-                .thumbnail(dto.getThumbnail())
                 .likes(dto.getLikes())
                 .postCreatedAt(dto.getPostCreatedAt())
+                .userEntity(dto.getUserEntity())
                 .build();
     }
 }

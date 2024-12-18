@@ -49,14 +49,12 @@ public class PostEntity {
     @Column(name = "image_urls")
     private List<String> imageUrls;
     
-    private String thumbnail;
-    
     private int likes;
     
     private String postCreatedAt;
     
  // UserEntity와의 연관 관계 설정 (ManyToOne)
-    @ManyToOne(fetch = FetchType.LAZY)  // 다대일 관계 user가 여러 게시글을 쓸수있게해준다.
+    @ManyToOne(fetch = FetchType.EAGER)  // 다대일 관계 user가 여러 게시글을 쓸수있게해준다.
     @JoinColumn(name = "user_id")       // 외래 키 컬럼명
     private UserEntity userEntity;            // 해당 게시글을 작성한 UserEntity
     
