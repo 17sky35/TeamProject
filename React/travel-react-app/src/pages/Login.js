@@ -76,7 +76,7 @@ const Login = () => {
       if(response){
         console.log("ID찾기 call 메서드 response:"+response);
         alert(`ID는 ${response.userId} 입니다`);
-      }   
+      }
 
     } catch (error) {
       console.error("ID찾기 실패:", error);
