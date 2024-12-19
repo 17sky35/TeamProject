@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect } from "react";
+import React, { useContext, useState, useEffect,useRef } from "react";
 import { GoogleMap, Marker, InfoWindow, Autocomplete, useJsApiLoader } from "@react-google-maps/api";
 import Write from "./Write";  // 작성 컴포넌트
 import TopIcon from "../TopIcon/TopIcon";  // 상단 아이콘
@@ -24,7 +24,7 @@ const Map = () => {
     const [placeName, setPlaceName] = useState("");  // 검색된 장소 이름
     const [placeDescription, setPlaceDescription] = useState("");  // 장소 설명
     const [searchBox, setSearchBox] = useState(null);  // Autocomplete 검색 박스
-    const [selectedMarker, setSelectedMarker] = useState(null);  // 선택된 마커
+    const [selectedMarker, setSelectedMarker] = useState({ position: { lat: 37.5665, lng: 126.9780 } });  // 선택된 마커
 
     // Google Maps API 로드 상태
     const { isLoaded, loadError } = useJsApiLoader({
@@ -35,6 +35,11 @@ const Map = () => {
     
     // 화면 로딩 중 TopIcon의 높이를 계산하여 상단에 여백을 두기 위한 상태 변수
     const [topIconHeight, setTopIconHeight] = useState(0);
+
+    useEffect(() => {
+        setList([])
+        setPlaceList([])
+    },[])
 
     useEffect(() => {
         const topIconElement = document.querySelector('.home-header');
@@ -53,15 +58,29 @@ const Map = () => {
         return <div>Google Maps API 로드 중 오류가 발생했습니다.</div>;
     }
 
-    // 지도를 클릭했을 때 마커 위치와 관련 정보를 설정
-    const handleMapClick = async (event) => {
-        const lat = event.latLng.lat();  // 클릭된 위치의 위도
-        const lng = event.latLng.lng();  // 클릭된 위치의 경도
-        setMarkerPosition({ lat, lng });  // 마커의 위치 업데이트
-        setPlaceName("선택된 위치");  // 기본 장소 이름
-        setPlaceDescription("");  // 설명 초기화
-        setSelectedMarker({ position: { lat, lng } });  // 선택된 마커 설정
+    
+    // // 지도를 클릭했을 때 마커 위치와 관련 정보를 설정
+    // const handleMapClick = async (event) => {
+    //     const lat = event.latLng.lat();  // 클릭된 위치의 위도
+    //     const lng = event.latLng.lng();  // 클릭된 위치의 경도
+    //     setMarkerPosition({ lat, lng });  // 마커의 위치 업데이트
+    //     setPlaceName("선택된 위치");  // 기본 장소 이름
+    //     setPlaceDescription("");  // 설명 초기화
+    //     setSelectedMarker({ position: { lat, lng } });  // 선택된 마커 설정
+    // };
+
+    // 지도에서 마커를 클릭했을 때 InfoWindow를 다시 표시할 수 있도록 설정
+    const handleMarkerClick = (position) => {
+        setSelectedMarker({
+            position,  // 클릭한 마커 위치
+        });
     };
+
+     // InfoWindow를 닫을 때 selectedMarker를 null로 설정
+     const handleInfoWindowClose = () => {
+        setSelectedMarker(null);  // InfoWindow 닫을 때 selectedMarker를 null로 설정
+    };
+
 
     // Autocomplete 검색 박스를 로드했을 때의 콜백
     const handleSearchBoxLoad = (autocomplete) => {
@@ -144,31 +163,22 @@ const Map = () => {
                         }}
                         center={center}  // 지도 중심 좌표
                         zoom={14}  // 기본 줌 레벨
-                        onClick={handleMapClick}  // 지도 클릭 시 콜백
+                        // onClick={handleMapClick}  // 지도 클릭 시 콜백
                         onLoad={(map) => setMap(map)}  // 지도 로드 시 콜백
                     >
                         {markerPosition && (
                             <Marker
                                 position={markerPosition}  // 마커 위치 설정
-                                onClick={() =>
-                                    setSelectedMarker({
-                                        position: markerPosition,  // 마커 클릭 시 선택된 마커 설정
-                                    })
-                                }
+                                onClick={() => handleMarkerClick(markerPosition)}
                             />
                         )}
 
-                        {selectedMarker && placeName && (
-                            <InfoWindow
-                                position={selectedMarker.position}  // InfoWindow의 위치 설정
-                                onCloseClick={() => setSelectedMarker(null)}  // InfoWindow 닫을 때 콜백
-                            >
-                                <div>
-                                    <h3>{placeName}</h3> 
-                                    <p>{placeDescription}</p>  {/* 장소 설명 표시 */}
-                                </div>
-                            </InfoWindow>
-                        )}
+{selectedMarker && (
+                        <CustomOverlay
+                            position={selectedMarker.position}
+                            content={`<h3>${placeName}</h3><p>${placeDescription}</p>`}
+                        />
+                    )}
                     </GoogleMap>
                 </div>
 
@@ -208,3 +218,51 @@ const Map = () => {
 };
 
 export default Map;
+
+
+
+// 마커 위에 HTML을 띄우는 OverlayView 컴포넌트
+const CustomOverlay = ({ position, content }) => {
+    const overlayRef = useRef(null);
+
+    useEffect(() => {
+        if (overlayRef.current && window.google) {
+            const { google } = window;
+
+            // 지도에 오버레이 추가
+            const overlay = new google.maps.OverlayView();
+            overlay.onAdd = function () {
+                const div = document.createElement("div");
+                div.className = "custom-info";
+                div.style.position = "absolute";
+                div.style.backgroundColor = "white";
+                div.style.padding = "10px";
+                div.style.borderRadius = "5px";
+                div.style.boxShadow = "0 0 5px rgba(0, 0, 0, 0.3)";
+                div.innerHTML = content;
+
+                this.getPanes().overlayLayer.appendChild(div);  // 오버레이에 추가
+
+                overlayRef.current = div;  // 참조에 div 저장
+            };
+
+            overlay.draw = function () {
+                const projection = this.getProjection();
+                const position = projection.fromLatLngToDivPixel(new google.maps.LatLng(position.lat, position.lng));
+
+                if (overlayRef.current) {
+                    overlayRef.current.style.left = `${position.x}px`;
+                    overlayRef.current.style.top = `${position.y}px`;
+                }
+            };
+
+            overlay.setMap(map);  // 지도에 오버레이 설정
+
+            return () => {
+                if (overlay) overlay.setMap(null);  // 컴포넌트가 unmount될 때 오버레이 제거
+            };
+        }
+    }, [position, content]);
+
+    return null;
+};

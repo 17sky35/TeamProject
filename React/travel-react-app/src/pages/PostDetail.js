@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import { TextField, Button } from "@mui/material";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams,useLocation  } from "react-router-dom";
 import { UserContext } from "../context/UserContext";
 import axios from "axios";
 import TopIcon from "../TopIcon/TopIcon";
@@ -8,10 +8,12 @@ import TopIcon from "../TopIcon/TopIcon";
 const PostDetail = () => {
     const { user } = useContext(UserContext); // 사용자 정보
     const { id } = useParams(); // 게시글 ID
-    const navigate = useNavigate();
-
+    const [previousPath, setPreviousPath] = React.useState(null);
     const [post, setPost] = useState({});
     const [imageUrls, setImageUrls] = useState([]);
+
+    const navigate = useNavigate();
+    const location = useLocation();  // 현재 위치 추적
 
     // 게시글 상세 데이터 가져오기
     const getPostDetail = async () => {
@@ -32,6 +34,14 @@ const PostDetail = () => {
             navigate(-1); // 이전 페이지로 이동
         }
     };
+
+    // 페이지 이동 전 이전 경로를 저장
+    useEffect(() => {
+        setPreviousPath(location.state?.from);
+        console.log(location.state?.from)
+    }, [location]);
+
+
     useEffect(() => {
         
     }, [post]); 
@@ -55,14 +65,20 @@ const PostDetail = () => {
         );
     }
 
+
     // 목록 버튼 클릭
     const listButtonClick = () => {
-        navigate("/Post");
+
+        if (previousPath && previousPath.includes(`/mypost/${user.id}`)) {
+            navigate(`/mypost/${user.id}`);  // 이전 경로로 이동
+        } else {
+            navigate("/post");
+        }
     };
 
     // 수정 버튼 클릭
     const toPostEdit = () => {
-        navigate(`/postEdit/${id}`);
+        navigate(`/postEdit/${id}`, { state: { from: location.state?.from } });
     };
 
     // 삭제 버튼 클릭
@@ -76,7 +92,11 @@ const PostDetail = () => {
                 });
                 if (response.data) {
                     alert("삭제되었습니다.");
-                    navigate("/post");
+                    if (previousPath && previousPath.includes(`/mypost/${user.id}`)) {
+                        navigate(`/mypost/${user.id}`);  // 이전 경로로 이동
+                    } else {
+                        navigate("/post");
+                    }
                 } else {
                     alert("삭제에 실패했습니다.");
                 }

@@ -43,7 +43,7 @@ function MainScreen() {
 
   // 내 게시물 보기 버튼 클릭 시 실행되는 함수
   const handleViewPosts = () => {
-    navigate("/Mypage/myPost"); // "/posts" 경로로 이동
+    navigate(`/mypost/${user.id}`); // "/posts" 경로로 이동
   };
 
   return (

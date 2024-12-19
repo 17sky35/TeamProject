@@ -1,6 +1,6 @@
 import React, { useContext, useState, useEffect } from "react";
 import { TextField, Button } from "@mui/material";
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import { UserContext } from "../context/UserContext";
 import { Delete } from "@mui/icons-material";
@@ -17,7 +17,9 @@ const PostEdit = () => {
     const [selectedFiles, setSelectedFiles] = useState([]); 
     const [previewUrls, setPreviewUrls] = useState([]); 
     const [existingImageUrls, setExistingImageUrls] = useState([]);
+    const [previousPath, setPreviousPath] = React.useState(null);
 
+    const location = useLocation();  // 현재 위치 추적
     const navigate = useNavigate();
     const { id } = useParams(); // URL에서 게시글 ID 가져오기
 
@@ -48,6 +50,12 @@ const PostEdit = () => {
 
         fetchPostDetails();
     }, [id, user.token, setCopyList]);
+
+    // 페이지 이동 전 이전 경로를 저장
+    useEffect(() => {
+        setPreviousPath(location.state?.from);
+        console.log("aaaaaaaaaaa"+location.state?.from)
+    }, [location]);
 
     // 파일 추가 핸들러
     const handleAddImages = (e) => {
@@ -128,7 +136,10 @@ const PostEdit = () => {
             });
 
             alert("글이 수정되었습니다!");
-            navigate(`/PostDetail/${id}`);
+
+            navigate(`/postdetail/${id}`, { state: { from: location.state?.from } });  // 이전 경로로 이동
+            
+
         } catch (error) {
             console.error("Error updating post:", error.response?.data || error.message);
             alert(
@@ -143,7 +154,7 @@ const PostEdit = () => {
     const handleCancel = () => {
         if (window.confirm("수정을 취소하시겠습니까?")) {
             alert("수정이 취소되었습니다.");
-            navigate("/post");
+            navigate(`/postdetail/${id}`, { state: { from: location.state?.from } });
         }
     };
 

@@ -50,6 +50,7 @@ body {
     box-sizing: border-box;
 }
 
+
 .place-info-container {
     background-color: var(--hover-color);
     padding: 10px;
@@ -121,6 +122,7 @@ body {
     padding: 20px;
     background-color: var(--background-color);
 }
+
 
 .google-map-container {
     width: 100%;

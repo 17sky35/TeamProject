@@ -63,8 +63,6 @@ const Post = () => {
 
     // 글쓰기 페이지 이동
     const toWritePage = () => {
-        setPlaceList([]);
-        setList([]);
         navigate("/map");
     };
 
@@ -89,7 +87,7 @@ const Post = () => {
 
     // 게시글 상세 페이지 이동
     const handlePostClick = (id) => {
-        navigate(`/postdetail/${id}`);
+        navigate(`/postdetail/${id}`, { state: { from: `/post` } });
     };
 
     return (
@@ -163,6 +161,14 @@ const Post = () => {
                         marginTop: "20px",
                     }}
                 >
+                    <Button
+                        variant="contained"
+                        color="primary"
+                        onClick={()=>navigate(`/mypost/${user.id}`)}
+                        sx={{ width: "15%" }}
+                    >
+                        MyPost
+                    </Button>
                     <Button
                         variant="contained"
                         color="primary"

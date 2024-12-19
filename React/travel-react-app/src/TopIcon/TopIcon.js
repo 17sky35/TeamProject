@@ -155,7 +155,7 @@ const TopIcon = () => {
                 border: "none",
                 borderRadius: "5px",
               }}
-              onClick={() => navigate(`/mypage/mypost/${user.id}`)}
+              onClick={() => navigate(`/mypost/${user.id}`)}
             >
               My post
             </button>

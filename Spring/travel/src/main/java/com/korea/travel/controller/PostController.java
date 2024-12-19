@@ -49,14 +49,15 @@ public class PostController {
         ResponseDTO<PostDTO> response = ResponseDTO.<PostDTO>builder().data(dtos).build();
         return ResponseEntity.ok(response);
     }
+    
     // 마이 게시판 조회
-    @GetMapping("/myPosts/{id}")
-    public ResponseEntity<?> getMyPosts(@PathVariable Long id){
-    	List<PostDTO> dtos = postService.getMyPosts(id);
+    @GetMapping("/myPosts/{userId}")
+    public ResponseEntity<?> getMyPosts(@PathVariable Long userId){
+    	List<PostDTO> dtos = postService.getMyPosts(userId);
         ResponseDTO<PostDTO> response = ResponseDTO.<PostDTO>builder().data(dtos).build();
         return ResponseEntity.ok(response);
     }
-
+    
     // 게시글 한 건 조회
     @GetMapping("/posts/postDetail/{id}")
     public ResponseEntity<?> getPostById(@PathVariable Long id) {
