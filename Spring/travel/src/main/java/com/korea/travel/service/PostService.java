@@ -5,6 +5,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -96,25 +97,36 @@ public class PostService {
     }
 
 
-    public PostDTO updatePost(Long id, String postTitle, String postContent, List<String> placeList, 
-            List<MultipartFile> files, List<String> existingImageUrls) {
-		PostEntity postEntity = postRepository.findById(id)
+    public PostDTO updatePost(Long id, String postTitle, String postContent, List<String> placeListParsed, 
+    		String userNickName,List<MultipartFile> files, List<String> existingImageUrls) {
+		
+    	
+    	PostEntity postEntity = postRepository.findById(id)
 		.orElseThrow(() -> new RuntimeException("게시글을 찾을 수 없습니다."));
 		
 		postEntity.setPostTitle(postTitle);
 		postEntity.setPostContent(postContent);
-		postEntity.setPlaceList(placeList);
+		postEntity.setUserNickname(userNickName);
+		
+		
+		if(placeListParsed != null && !placeListParsed.isEmpty()) {
+			postEntity.setPlaceList(new ArrayList<>(placeListParsed));
+        }else {
+        	postEntity.setPlaceList(null);
+        }
 		
 		List<String> allImageUrls = new ArrayList<>(existingImageUrls);
+		
 		if (files != null && !files.isEmpty()) {
-		List<String> newImageUrls = saveFiles(files);
-		allImageUrls.addAll(newImageUrls);
+			List<String> newImageUrls = saveFiles(files);
+			allImageUrls.addAll(newImageUrls);
 		}
+		
 		postEntity.setImageUrls(allImageUrls);
 		
 		PostEntity updatedEntity = postRepository.save(postEntity);
 		return convertToDTO(updatedEntity);
-		}
+	}
 
 
 

@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect,useRef } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { GoogleMap, Marker, InfoWindow, Autocomplete, useJsApiLoader } from "@react-google-maps/api";
 import Write from "./Write";  // 작성 컴포넌트
 import TopIcon from "../TopIcon/TopIcon";  // 상단 아이콘
@@ -125,14 +125,11 @@ const Map = () => {
     };
 
     return (
-        <div className="map-container">
+        <div className="map-container" >
             <div style={{zIndex:"2000"}}>
-               <TopIcon />  {/* 상단 아이콘 표시 */}
+               <TopIcon text="글쓰기" />  {/* 상단 아이콘 표시 */}
             </div>
             <div className="map-sidebar">
-                <div className="write_h1">
-                    <h1>경로 추가</h1>
-                </div>
                 <div className="map-search-container">
                     <Autocomplete onLoad={handleSearchBoxLoad} onPlaceChanged={handlePlaceChanged}>
                         <input
@@ -173,12 +170,20 @@ const Map = () => {
                             />
                         )}
 
-{selectedMarker && (
-                        <CustomOverlay
-                            position={selectedMarker.position}
-                            content={`<h3>${placeName}</h3><p>${placeDescription}</p>`}
-                        />
-                    )}
+                        {selectedMarker && placeName && (
+                            <InfoWindow
+                                position={{
+                                    lat: selectedMarker.position.lat + 0.0027,
+                                    lng: selectedMarker.position.lng,
+                                }}
+                                onCloseClick={handleInfoWindowClose}
+                            >
+                                <div style={{ position: 'relative', fontSize: "12px", lineHeight: "1.5", textAlign: "center", padding: "5px" }}>
+                                    <h3 style={{ fontSize: "14px", margin: "5px 0", color: "#333" }}>{placeName}</h3>
+                                    <p style={{ fontSize: "12px", margin: "5px 0", color: "#666" }}>{placeDescription}</p>
+                                </div>
+                            </InfoWindow>
+                        )}
                     </GoogleMap>
                 </div>
 
@@ -218,51 +223,3 @@ const Map = () => {
 };
 
 export default Map;
-
-
-
-// 마커 위에 HTML을 띄우는 OverlayView 컴포넌트
-const CustomOverlay = ({ position, content }) => {
-    const overlayRef = useRef(null);
-
-    useEffect(() => {
-        if (overlayRef.current && window.google) {
-            const { google } = window;
-
-            // 지도에 오버레이 추가
-            const overlay = new google.maps.OverlayView();
-            overlay.onAdd = function () {
-                const div = document.createElement("div");
-                div.className = "custom-info";
-                div.style.position = "absolute";
-                div.style.backgroundColor = "white";
-                div.style.padding = "10px";
-                div.style.borderRadius = "5px";
-                div.style.boxShadow = "0 0 5px rgba(0, 0, 0, 0.3)";
-                div.innerHTML = content;
-
-                this.getPanes().overlayLayer.appendChild(div);  // 오버레이에 추가
-
-                overlayRef.current = div;  // 참조에 div 저장
-            };
-
-            overlay.draw = function () {
-                const projection = this.getProjection();
-                const position = projection.fromLatLngToDivPixel(new google.maps.LatLng(position.lat, position.lng));
-
-                if (overlayRef.current) {
-                    overlayRef.current.style.left = `${position.x}px`;
-                    overlayRef.current.style.top = `${position.y}px`;
-                }
-            };
-
-            overlay.setMap(map);  // 지도에 오버레이 설정
-
-            return () => {
-                if (overlay) overlay.setMap(null);  // 컴포넌트가 unmount될 때 오버레이 제거
-            };
-        }
-    }, [position, content]);
-
-    return null;
-};

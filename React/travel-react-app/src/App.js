@@ -48,7 +48,7 @@ function App() {
               <CopyPlaceListContext.Provider value={{copyPlaceList,setCopyPlaceList}}>
                 <div className="AppWrapper">
                   <Router>
-                    <Logo />
+                    {/* <Logo /> */}
                     <Routes>
                       <Route path="/" element={<HomeScreen />} />
                       <Route path="/main" element={<MainScreen />} />

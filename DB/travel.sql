@@ -76,9 +76,7 @@ SELECT * FROM post_images;
 -- likes 테이블 조회
 SELECT * FROM likes;
 
-CREATE USER 'root'@'%' IDENTIFIED BY '1111';
-GRANT ALL PRIVILEGES ON *.* TO 'root'@'%';
-FLUSH PRIVILEGES;
+
 
 
 
@@ -93,6 +91,13 @@ DROP TABLE IF EXISTS post_images;
 -- likes 테이블 삭제
 DROP TABLE IF EXISTS likes;
 
+
+
+
+
+CREATE USER 'root'@'%' IDENTIFIED BY '1111';
+GRANT ALL PRIVILEGES ON *.* TO 'root'@'%';
+FLUSH PRIVILEGES;
 
 
 

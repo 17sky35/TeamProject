@@ -109,19 +109,14 @@ const PostDetail = () => {
 
     return (
         <div>
-            <div>
-               <TopIcon /> 
-            </div>
-            <h1
+            <TopIcon text="게시글 보기"/>
+            <div 
                 style={{
-                    marginBottom: "20px",
-                    fontWeight: "bold",
-                    textAlign: "center",
+                    position:"relative", 
+                    marginTop:"140px",
+                    zIndex:"-1"
                 }}
             >
-                게시글 보기
-            </h1>
-            <div style={{position:"relative", zIndex:"-1"}}>
                 <div>
                     {/* 제목 */}
                     <TextField style={{ marginBottom: "20px" }}
@@ -157,7 +152,7 @@ const PostDetail = () => {
                         fullWidth
                         variant="outlined"
                         label="여행지"
-                        value={post.placeList?.join(", ") || "등록된 여행지가 없습니다."}
+                        value={post.placeList?.join(" -> ") || "등록된 여행지가 없습니다."}
                         // multiline
                         // rows={2}
                     />

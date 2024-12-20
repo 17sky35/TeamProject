@@ -54,7 +54,6 @@ const PostEdit = () => {
     // 페이지 이동 전 이전 경로를 저장
     useEffect(() => {
         setPreviousPath(location.state?.from);
-        console.log("aaaaaaaaaaa"+location.state?.from)
     }, [location]);
 
     // 파일 추가 핸들러
@@ -111,11 +110,11 @@ const PostEdit = () => {
 
         // FormData 생성 및 전송
         const formData = new FormData();
+        
         formData.append("postTitle", postTitle);
         formData.append("postContent", postContent);
         formData.append("userNickName", user.userNickName);
-        formData.append("placeList", copyList?.join(", ") || ""); // 빈 문자열로 기본값 설정
-        
+        formData.append("placeList", copyList?.join(", "));        
         formData.append("existingImageUrls", JSON.stringify(existingImageUrls));
 
 
@@ -160,10 +159,6 @@ const PostEdit = () => {
 
     return (
         <div className="write">
-            <div className="write_h1">
-                <h1>글쓰기</h1>
-            </div>
-
             {/* 제목 입력 */}
             <div>
                 <TextField
@@ -194,7 +189,7 @@ const PostEdit = () => {
                     fullWidth
                     variant="outlined"
                     label="여행지"
-                    value={copyList.join(", ")}
+                    value={copyList.join(" -> ")}
                     multiline
                     rows={2}
                 />
@@ -234,7 +229,7 @@ const PostEdit = () => {
                                 src={`http://192.168.3.24:9090${url}`} 
                                 alt={`existing-${index}`}
                             />
-                            <Delete onClick={() => handleDeleteImage(index)} />
+                            <Delete onClick={() => handleDeleteImage(index,true)} />
                         </div>
                     ))}
                     {previewUrls.map((url, index) => (
@@ -243,7 +238,7 @@ const PostEdit = () => {
                                 src={url} 
                                 alt={`preview-${index}`}
                             />
-                            <Delete onClick={() => handleDeleteImage(index)} />
+                            <Delete onClick={() => handleDeleteImage(index,false)} />
                         </div>
                     ))}
                 </div>
