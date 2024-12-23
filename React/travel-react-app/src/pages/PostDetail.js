@@ -174,13 +174,15 @@ const PostDetail = () => {
                 </div>
                 <div style={{
                     display:"grid",
-                    gridTemplateColumns:"repeat(3, 1fr)",
+                    gridTemplateColumns:"repeat(5, 1fr)",
                     gap: "10px",
                     marginTop: "20px"
                 }}>
                     {imageUrls.map((image, index) => (
                         <div key={index} style={{
                             display:"flex", 
+                            width:"200px",
+                            height:"200px",
                             justifyContent:"center",
                             alignItems:"center",
                             border: "1px solid #ddd", // 테두리 추가 (선택 사항)
