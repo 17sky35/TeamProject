@@ -35,6 +35,7 @@ public class SecurityConfig {
           			"/travel/userFindId",
           			"/travel/userFindPassword",
           			"/travel/userResetPassword",
+          			"/travel/oauth2/google/callback",
           			"/api/email/**", 
           			"/uploads/**"
           			).permitAll() //경로는 인증 없이 허용

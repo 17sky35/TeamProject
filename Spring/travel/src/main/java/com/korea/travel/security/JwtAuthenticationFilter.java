@@ -32,7 +32,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 	    		requestURI.equals("/travel/signup")|| 
 	    		requestURI.equals("/travel/userFindId")|| 
 	    		requestURI.equals("/travel/userFindPassword")|| 
-	    		requestURI.equals("/travel/userResetPassword")|| 
+	    		requestURI.equals("/travel/userResetPassword")||
+	    		requestURI.equals("/travel/oauth2/google/callback")||
 	    		requestURI.startsWith("/api/email")|| 
 	    		requestURI.startsWith("/uploads")) {
 	        filterChain.doFilter(request, response);
