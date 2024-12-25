@@ -22,7 +22,7 @@ const Post = () => {
     // 서버에서 게시물 가져오기
     const getPostList = async () => {
         try {
-            const response = await axios.get("http://192.168.3.24:9090/api/posts", {
+            const response = await axios.get("http://192.168.45.67:9090/api/posts", {
                 headers: {
                     Authorization: `Bearer ${user.token}`,
                 },
@@ -33,7 +33,7 @@ const Post = () => {
             
             // 좋아요 상태 한번에 가져오기
             const likedStatusPromises = fetchedPosts.map((post) =>
-                axios.get(`http://192.168.3.24:9090/api/likes/${post.postId}/isLiked`, {
+                axios.get(`http://192.168.45.67:9090/api/likes/${post.postId}/isLiked`, {
                 headers: { Authorization: `Bearer ${user.token}` },
                 })
             );
@@ -89,7 +89,7 @@ const Post = () => {
   const likeButtonClick = async (postId) => {
     try {
         const isLiked = likedPosts[postId];
-        const url = `http://192.168.3.24:9090/api/likes/${postId}`;
+        const url = `http://192.168.45.67:9090/api/likes/${postId}`;
         const method = isLiked ? "delete" : "post";
 
         await axios({ method, url, headers: { Authorization: `Bearer ${user.token}` } });
@@ -150,7 +150,7 @@ const Post = () => {
                                             onClick={() => handlePostClick(post.postId)}
                                             src={
                                                 post.imageUrls && post.imageUrls.length > 0
-                                                    ? `http://192.168.3.24:9090${post.imageUrls[0]}`
+                                                    ? `http://192.168.45.67:9090${post.imageUrls[0]}`
                                                     : logo
                                             }
                                             alt="썸네일"

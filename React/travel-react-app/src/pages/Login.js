@@ -179,7 +179,7 @@ const Login = () => {
       // JWT 디코딩하여 Google 사용자 정보 확인
       try {
         // Authorization 헤더에 Bearer 토큰 포함, payload는 본문에 전달
-        const response = await axios.post('http://192.168.3.24:9090/travel/oauth2/google/callback', { credential },{
+        const response = await axios.post('http://192.168.45.67:9090/travel/oauth2/google/callback', { credential },{
           headers: {
               'Authorization': `Bearer ${credential}` // Google 로그인 후 받은 credential
           }

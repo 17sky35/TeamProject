@@ -59,7 +59,7 @@ const MyPage = () => {
       // 서버에 새 닉네임 업데이트 요청
       const newUserNickname = { userNickName: newNickname };
       const response = await axios.patch(
-        `http://192.168.3.25:9090/travel/userNickNameEdit/${user.id}`,
+        `http://192.168.45.67:9090/travel/userNickNameEdit/${user.id}`,
         newUserNickname,
         {
           headers: {
@@ -103,7 +103,7 @@ const MyPage = () => {
     try {
       // 서버에 비밀번호 변경 요청
       const response = await axios.patch(
-        `http://192.168.3.25:9090/travel/userPasswordEdit/${user.id}`,
+        `http://192.168.45.67:9090/travel/userPasswordEdit/${user.id}`,
         {
           userPassword: currentPassword, // 현재 비밀번호
           newPassword: newPassword,     // 새 비밀번호
@@ -140,7 +140,7 @@ const MyPage = () => {
 
       // 서버에 계정 삭제 요청
       const response = await axios.delete(
-        `http://192.168.3.25:9090/travel/withdraw/${user.id}`,
+        `http://192.168.45.67:9090/travel/withdraw/${user.id}`,
         {
           headers: {
             "Content-Type": "application/json",
@@ -210,7 +210,7 @@ const MyPage = () => {
       try {
         // 서버에 프로필 이미지 업로드 요청
         const response = await axios.patch(
-          `http://192.168.3.25:9090/travel/userProfileImageEdit/${user.id}`,
+          `http://192.168.45.67:9090/travel/userProfileImageEdit/${user.id}`,
           formData,
           {
             headers: {
@@ -223,7 +223,7 @@ const MyPage = () => {
         if (response.status === 200) {
           const updatedUser = {
             ...user,
-            userProfileImage: `http://192.168.3.25:9090${response.data.userProfileImage}`
+            userProfileImage: `http://192.168.45.67:9090${response.data.userProfileImage}`
           };
           dispatch(updatedUser);
           AsyncStorage.setItem('user', JSON.stringify(updatedUser));
@@ -242,7 +242,7 @@ const MyPage = () => {
 
     try {
       const response = await axios.patch(
-        `http://192.168.3.25:9090/travel/userProfileImageDelete/${user.id}`, {},
+        `http://192.168.45.67:9090/travel/userProfileImageDelete/${user.id}`, {},
         {
           headers: {
             "Authorization": `Bearer ${user.token}`,
@@ -283,7 +283,7 @@ const MyPage = () => {
         <View style={styles.profileImageContainer}>
           <Image
             source={
-              user.userProfileImage && user.userProfileImage !== 'http://192.168.3.25:9090null'
+              user.userProfileImage && user.userProfileImage !== 'http://192.168.45.67:9090null'
                 ? { uri: user.userProfileImage }
                 : require("../../assets/profile.jpg")
             }

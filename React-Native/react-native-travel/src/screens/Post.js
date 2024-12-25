@@ -20,7 +20,7 @@ const Post = () => {
     useCallback(() => {
       const fetchPosts = async () => {
         try {
-          const response = await axios.get("http://192.168.3.25:9090/api/posts", {
+          const response = await axios.get("http://192.168.45.67:9090/api/posts", {
             headers: {
               'Authorization': `Bearer ${user.token}`
             }
@@ -44,7 +44,7 @@ const Post = () => {
         const likedStatus = {};
         for (const post of postList) {
           const response = await axios.get(
-            `http://192.168.3.25:9090/api/likes/${post.postId}/isLiked`,
+            `http://192.168.45.67:9090/api/likes/${post.postId}/isLiked`,
             {
               headers: {
                 Authorization: `Bearer ${user.token}`,
@@ -75,7 +75,7 @@ const Post = () => {
     try {
       if (likedPosts[postId]) {
         // 이미 좋아요 상태인 경우 API를 통해 좋아요 삭제
-        await axios.delete(`http://192.168.3.25:9090/api/likes/${postId}`, {
+        await axios.delete(`http://192.168.45.67:9090/api/likes/${postId}`, {
           headers: {
             Authorization: `Bearer ${user.token}`,
           },
@@ -91,7 +91,7 @@ const Post = () => {
         );
       } else {
         // 좋아요 상태가 아닌 경우 API를 통해 좋아요 추가
-        await axios.post(`http://192.168.3.25:9090/api/likes/${postId}`, {}, {
+        await axios.post(`http://192.168.45.67:9090/api/likes/${postId}`, {}, {
           headers: {
             Authorization: `Bearer ${user.token}`,
           },
@@ -127,7 +127,7 @@ const Post = () => {
   const renderPost = ({ item }) => {
 
     const thumbnail = item.imageUrls && item.imageUrls.length > 0
-      ? `http://192.168.3.25:9090${item.imageUrls[0]}`
+      ? `http://192.168.45.67:9090${item.imageUrls[0]}`
       : null;
 
     return (

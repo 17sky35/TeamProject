@@ -27,7 +27,7 @@ const PostEdit = () => {
     useEffect(() => {
         const fetchPostDetails = async () => {
             try {
-                const response = await axios.get(`http://192.168.3.24:9090/api/posts/postDetail/${id}`, {
+                const response = await axios.get(`http://192.168.45.67:9090/api/posts/postDetail/${id}`, {
                     headers: { 'Authorization': `Bearer ${user.token}` }
                 });
                 
@@ -127,7 +127,7 @@ const PostEdit = () => {
         }
 
         try {
-            const response = await axios.put(`http://192.168.3.24:9090/api/posts/postEdit/${id}`, formData, {
+            const response = await axios.put(`http://192.168.45.67:9090/api/posts/postEdit/${id}`, formData, {
                 headers: { 
                     "Content-Type": "multipart/form-data",
                     'Authorization': `Bearer ${user.token}`
@@ -226,7 +226,7 @@ const PostEdit = () => {
                     {existingImageUrls.map((url, index) => (
                         <div key={`existing-${index}`}>
                             <img 
-                                src={`http://192.168.3.24:9090${url}`} 
+                                src={`http://192.168.45.67:9090${url}`} 
                                 alt={`existing-${index}`}
                             />
                             <Delete onClick={() => handleDeleteImage(index,true)} />

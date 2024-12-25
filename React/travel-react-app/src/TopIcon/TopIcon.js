@@ -110,7 +110,7 @@ const TopIcon = ({text}) => {
               borderRadius: "50%",
               cursor: "pointer"
             }}
-            src={user.userProfileImage?`http://192.168.3.24:9090${user.userProfileImage}`: defaultImage}
+            src={user.userProfileImage?`http://192.168.45.67:9090${user.userProfileImage}`: defaultImage}
             alt="profile"
             onClick={() => {
               if(isProfileDropdownVisible){

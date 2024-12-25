@@ -18,7 +18,7 @@ const PostDetail = () => {
     // 게시글 상세 데이터 가져오기
     const getPostDetail = async () => {
         try {
-            const response = await axios.get(`http://192.168.3.24:9090/api/posts/postDetail/${id}`, {
+            const response = await axios.get(`http://192.168.45.67:9090/api/posts/postDetail/${id}`, {
                 headers: { 
                     'Authorization': `Bearer ${user.token}`
                 },
@@ -85,7 +85,7 @@ const PostDetail = () => {
     const handleDelete = async () => {
         if (window.confirm("게시글을 삭제하시겠습니까?")) {
             try {
-                const response = await axios.delete(`http://192.168.3.24:9090/api/postDelete/${id}`, {
+                const response = await axios.delete(`http://192.168.45.67:9090/api/postDelete/${id}`, {
                     headers: { 
                         'Authorization': `Bearer ${user.token}`
                     },
@@ -191,7 +191,7 @@ const PostDetail = () => {
                             backgroundColor: "#f9f9f9", // 배경색 추가 (선택 사항)
                         }}>
                             <img 
-                                src={`http://192.168.3.24:9090${image}`} 
+                                src={`http://192.168.45.67:9090${image}`} 
                                 alt={`image-${index}`}
                                 style={{
                                     height:"20vh",

@@ -193,7 +193,7 @@ const Map = () => {
       });
   
       // Send POST request
-      const response = await axios.post(`http://192.168.3.25:9090/api/write/${user.id}`, formData, {
+      const response = await axios.post(`http://192.168.45.67:9090/api/write/${user.id}`, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
           "Authorization": `Bearer ${user.token}`,
