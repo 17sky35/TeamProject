@@ -1,5 +1,6 @@
 {
   "expo": {
+    "platforms": ["ios", "android"],
     "name": "react-native-travel",
     "slug": "react-native-travel",
     "version": "1.0.0",
@@ -7,37 +8,32 @@
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "newArchEnabled": true,
-    "host": "localhost",
-    "devServer": {
-      "useDevServer": true,
-      "port": 8081,
-      "http": true
-    },
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.17sky35@naver.com.react-native-travel",
+      "googleServicesFile": "./google-services.json"
     },
     "android": {
+      "package": "com.17sky35@naver.com.react-native-travel",
+      "googleServicesFile": "./google-services.json",
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      },
-      "package": "com.anonymous.reactnativetravel"
+      }
+    },
+    "extra": {
+      "googleClientId": "970822306561-nml5hq58lgf7ve90ugj1dhq53s5gatbm.apps.googleusercontent.com"
     },
     "web": {
       "favicon": "./assets/favicon.png"
     },
     "plugins": [
       "expo-font"
-    ],
-    "extra": {
-      "eas": {
-        "projectId": "6223c014-c3ed-4f3b-9365-a1717b458cf6"
-      }
-    }
+    ]
   }
 }

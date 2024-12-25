@@ -45,7 +45,7 @@ const EditPost = () => {
   const [selectedImages, setSelectedImages] = useState(
     (post?.imageUrls || []).map((uri) => ({
       id: UUID.v4(),
-      uri: `http://192.168.45.67:9090${uri}`, // 앞에 base URL을 추가
+      uri: `http://192.168.3.25:9090${uri}`, // 앞에 base URL을 추가
     })) || []
   );
 
@@ -244,7 +244,7 @@ const EditPost = () => {
       });
 
       const response = await axios.put(
-        `http://192.168.45.67:9090/api/posts/postEdit/${post.postId}`,
+        `http://192.168.3.25:9090/api/posts/postEdit/${post.postId}`,
         formData,
         {
           headers: {

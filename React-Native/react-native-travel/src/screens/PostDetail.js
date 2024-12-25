@@ -32,7 +32,7 @@ const PostDetail = ({ route }) => {
     const checkLikeStatus = async () => {
       try {
         const response = await axios.get(
-          `http://192.168.45.67:9090/api/likes/${post.postId}/isLiked`,
+          `http://192.168.3.25:9090/api/likes/${post.postId}/isLiked`,
           {
             headers: {
               Authorization: `Bearer ${user.token}`,
@@ -53,7 +53,7 @@ const PostDetail = ({ route }) => {
     try {
       if (isLiked) {
         // 좋아요 취소
-        await axios.delete(`http://192.168.45.67:9090/api/likes/${post.postId}`,
+        await axios.delete(`http://192.168.3.25:9090/api/likes/${post.postId}`,
           {
             headers: {
               Authorization: `Bearer ${user.token}`,
@@ -62,7 +62,7 @@ const PostDetail = ({ route }) => {
         setLikes(prev => prev - 1);
       } else {
         // 좋아요 추가
-        await axios.post(`http://192.168.45.67:9090/api/likes/${post.postId}`,{},
+        await axios.post(`http://192.168.3.25:9090/api/likes/${post.postId}`,{},
           {
             headers: {
               Authorization: `Bearer ${user.token}`,
@@ -96,7 +96,7 @@ const PostDetail = ({ route }) => {
       }}
     >
       <Image
-        source={{ uri: `http://192.168.45.67:9090${item}` }}
+        source={{ uri: `http://192.168.3.25:9090${item}` }}
         style={styles.image}
       />
     </TouchableOpacity>
@@ -218,7 +218,7 @@ const PostDetail = ({ route }) => {
             <Text style={styles.modalCloseText}>닫기</Text>
           </TouchableOpacity>
           <Image
-            source={{ uri: `http://192.168.45.67:9090${selectedImage}` }}
+            source={{ uri: `http://192.168.3.25:9090${selectedImage}` }}
             style={styles.modalImage}
             resizeMode="contain"
           />

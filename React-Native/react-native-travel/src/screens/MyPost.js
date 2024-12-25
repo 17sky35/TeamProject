@@ -22,7 +22,7 @@ const MyPost = () => {
   const fetchMyPosts = async () => {
     try {
       setLoading(true);
-      const response = await axios.get(`http://192.168.45.67:9090/api/myPosts/${user.id}`, {
+      const response = await axios.get(`http://192.168.3.25:9090/api/myPosts/${user.id}`, {
         headers: {
           'Authorization': `Bearer ${user.token}`
         }
@@ -53,7 +53,7 @@ const MyPost = () => {
       {/* 썸네일 */}
       {item.imageUrls && item.imageUrls.length > 0 ? (
         <Image
-          source={{ uri: `http://192.168.45.67:9090${item.imageUrls[0]}` }}
+          source={{ uri: `http://192.168.3.25:9090${item.imageUrls[0]}` }}
           style={styles.thumbnail}
         />
       ) : (

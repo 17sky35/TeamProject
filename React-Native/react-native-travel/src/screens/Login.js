@@ -6,8 +6,8 @@ import axios from 'axios';
 import { validateEmail, validatePassword, removeWhitespace } from '../utils/common';
 import { UserContext } from '../contexts/UserContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { ImageBackground, Modal, Text, TouchableOpacity,Platform  } from 'react-native';
-import * as Google from 'expo-auth-session/providers/google';
+import { ImageBackground, Modal, Text, TouchableOpacity } from 'react-native';
+import * as Google from 'expo-auth-session';
 
 const ModalBackground = styled.View`
   flex: 1;
@@ -83,7 +83,7 @@ const Logo = styled.Image`
 `;
 
 const Login = ({ navigation }) => {
-  const { dispatch,setGoogleUser } = useContext(UserContext);
+  const { dispatch } = useContext(UserContext);
   const [loginId, setLoginId] = useState('');
   const [loginPassword, setLoginPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
@@ -115,6 +115,31 @@ const Login = ({ navigation }) => {
   const [newPasswordError, setNewPasswordError] = useState('');
   const [confirmNewPasswordError, setConfirmNewPasswordError] = useState('');
 
+
+  //구글로그인
+  const [request, response, promptAsync] = Google.useAuthRequest({
+    clientId: '970822306561-nml5hq58lgf7ve90ugj1dhq53s5gatbm.apps.googleusercontent.com', // Google에서 받은 OAuth 클라이언트 ID
+    redirectUri: Google.makeRedirectUri({
+      useProxy: true, // 개발 중에는 true로 설정해야 합니다
+    }),
+  });
+
+  const [userInfo, setUserInfo] = useState(null);
+
+  useEffect(() => {
+    if (response?.type === 'success') {
+      const { id_token } = response.params;
+      fetch(`https://www.googleapis.com/oauth2/v3/tokeninfo?id_token=${id_token}`)
+        .then((res) => res.json())
+        .then((data) => setUserInfo(data)) // 사용자 정보 저장
+        .catch((err) => console.error(err));
+    }
+    console.log(userInfo)
+  }, [response]);
+
+
+
+
   // 로그인 아이디 핸들러
   const _handleLoginIdChange = loginId => {
     const changedLoginId = removeWhitespace(loginId);
@@ -143,7 +168,7 @@ const Login = ({ navigation }) => {
 
     try {
       const response = await axios.post(
-        'http://192.168.45.67:9090/travel/login', // 백엔드 엔드포인트
+        'http://192.168.3.25:9090/travel/login', // 백엔드 엔드포인트
         userProfile,
         {
           headers: { 'Content-Type': 'application/json' }
@@ -154,7 +179,7 @@ const Login = ({ navigation }) => {
         // 서버에서 받은 userProfileImage 경로를 절대 URL로 변환
         const updatedUserData = {
           ...response.data,
-          userProfileImage: `http://192.168.45.67:9090${response.data.userProfileImage}`
+          userProfileImage: `http://192.168.3.25:9090${response.data.userProfileImage}`
         };
 
         // 변환된 userProfileImage를 포함한 데이터로 UserContext 업데이트
@@ -194,7 +219,7 @@ const Login = ({ navigation }) => {
     }
 
     try {
-      const response = await axios.post('http://192.168.45.67:9090/travel/userFindId', { 
+      const response = await axios.post('http://192.168.3.25:9090/travel/userFindId', { 
         userName: findIdName, 
         userPhoneNumber: findIdPhone,
       });
@@ -258,7 +283,7 @@ const Login = ({ navigation }) => {
         console.log("Sending data to /findPassword:", requestData);
 
         const userVerifyResponse = await axios.post(
-          'http://192.168.45.67:9090/travel/userFindPassword',
+          'http://192.168.3.25:9090/travel/userFindPassword',
           requestData,
           {
               headers: {
@@ -271,7 +296,7 @@ const Login = ({ navigation }) => {
 
         if (userVerifyResponse.data) {
             const authCodeResponse = await axios.get(
-                `http://192.168.45.67:9090/api/email/auth?address=${findPasswordEmail}`
+                `http://192.168.3.25:9090/api/email/auth?address=${findPasswordEmail}`
             );
 
             if (authCodeResponse.data.success) {
@@ -300,7 +325,7 @@ const Login = ({ navigation }) => {
 
     try {
       setIsLoading(true);
-      const response = await axios.post(`http://192.168.45.67:9090/api/email/auth?address=${findPasswordEmail}&authCode=${authCode}`);
+      const response = await axios.post(`http://192.168.3.25:9090/api/email/auth?address=${findPasswordEmail}&authCode=${authCode}`);
 
       if (response.data.success) {
         alert("이메일 인증이 완료되었습니다.");
@@ -338,7 +363,7 @@ const Login = ({ navigation }) => {
     if (hasError) return;
 
     try {
-      const response = await axios.post('http://192.168.45.67:9090/travel/userResetPassword', {
+      const response = await axios.post('http://192.168.3.25:9090/travel/userResetPassword', {
         userId: findPasswordEmail,
         userPassword: newPassword
       });
@@ -355,46 +380,6 @@ const Login = ({ navigation }) => {
       setNewPasswordError('비밀번호 변경 중 오류가 발생했습니다.');
     }
   };
-
-  //구글로그인
-
-  const [request, response, promptAsync] = Google.useAuthRequest({
-    clientId: '970822306561-nml5hq58lgf7ve90ugj1dhq53s5gatbm.apps.googleusercontent.com', // Android용 클라이언트 ID
-  });
-
-  
-  // 토큰을 이용하여 유저 정보를 가져오는 함수
-  const getUserInfo = async (token) => {
-
-    if (!token) return;
-
-    try {
-      const responses = await axios.post('http://192.168.45.67:9090/travel/oauth2/google/callback',{token},{
-        headers: {
-            'Authorization': `Bearer ${token}`
-        }
-      })
-      console.log("백엔드 응답:", responses.data);
-    
-      if (responses.data) {          
-        setGoogleUser(responses.data);
-
-      }
-
-    } catch (e) {
-      console.log(e);
-    }
-  };
-
-  // Google 인증 응답이 바뀔때마다 실행
-  useEffect(() => {
-    if (response?.type === 'success') {
-      const { accessToken } = response.authentication;
-      // accessToken을 사용하여 사용자 정보를 요청합니다.
-      getUserInfo(accessToken);
-      console.log(accessToken)
-    }  
-  }, [response]);
 
   return (
     <Background source={require("../../assets/flowers.png")} resizeMode="cover">
@@ -435,11 +420,9 @@ const Login = ({ navigation }) => {
         <Button title="로그인" onPress={_handleLoginButtonPress} />
         <Button title="회원가입" onPress={() => navigation.navigate('Signup')} isFilled={false} />
         <Button
+          title="구글 로그인"
+          onPress={() => promptAsync()} // 로그인 요청
           disabled={!request}
-          title="Login"
-          onPress={() => {
-            promptAsync();
-          }}
         />
 
         <Modal

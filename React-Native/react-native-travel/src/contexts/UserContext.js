@@ -10,7 +10,6 @@ export const UserContext = createContext({
 });
 
 export const UserProvider = ({ children }) => {
-  const [googleUser,setGoogleUser] = useState({})
   const [user, setUser] = useState({
     userId: null,
     userName: null,
@@ -90,7 +89,7 @@ export const UserProvider = ({ children }) => {
   }, []);
 
   return (
-    <UserContext.Provider value={{ googleUser,setGoogleUser,user, users, registerUser, loginUser, logoutUser, dispatch }}>
+    <UserContext.Provider value={{ user, users, registerUser, loginUser, logoutUser, dispatch }}>
       {children}
     </UserContext.Provider>
   );

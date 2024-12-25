@@ -106,7 +106,7 @@ const Signup = () => {
 
     try {
       setIsLoading(true);
-      const response = await axios.get(`http://192.168.45.67:9090/api/email/auth?address=${userId}`);
+      const response = await axios.get(`http://192.168.3.25:9090/api/email/auth?address=${userId}`);
 
       if (response.data.success) {
         alert("인증 코드가 이메일로 전송되었습니다.");
@@ -129,7 +129,7 @@ const Signup = () => {
     }
 
     try {
-      const response = await axios.post(`http://192.168.45.67:9090/api/email/auth?address=${userId}&authCode=${authCode}`);
+      const response = await axios.post(`http://192.168.3.25:9090/api/email/auth?address=${userId}&authCode=${authCode}`);
 
       if (response.data.success) {
         alert("이메일 인증이 완료되었습니다.");
@@ -151,7 +151,7 @@ const Signup = () => {
 
     try {
       setIsLoading(true);
-      const response = await axios.post("http://192.168.45.67:9090/travel/userIdCheck", { userId });
+      const response = await axios.post("http://192.168.3.25:9090/travel/userIdCheck", { userId });
 
       if (response.data) {
         alert("사용 가능한 아이디입니다.");
@@ -203,7 +203,7 @@ const Signup = () => {
     };
 
     try {
-      const response = await axios.post("http://192.168.45.67:9090/travel/signup", newUser, {
+      const response = await axios.post("http://192.168.3.25:9090/travel/signup", newUser, {
         headers: { "Content-Type": "application/json" },
       });
 
