@@ -6,6 +6,7 @@ import "../css/Post.css";
 import axios from "axios";
 import { UserContext } from "../context/UserContext";
 import logo from "../image/logo4.png";
+import config from "../Apikey";
 
 const MyPost = () => {
     const navigate = useNavigate();
@@ -21,7 +22,7 @@ const MyPost = () => {
     // 서버에서 게시물 가져오기
     const getMyPostList = async () => {
         try {
-            const response = await axios.get(`http://192.168.45.67:9090/api/myPosts/${user.id}`, {
+            const response = await axios.get(`http://${config.IP_ADD}:9090/api/myPosts/${user.id}`, {
                 headers: {
                     Authorization: `Bearer ${user.token}`,
                 },
@@ -31,7 +32,7 @@ const MyPost = () => {
 
             // 좋아요 상태 가져오기
             const likedStatusPromises = fetchedPosts.map((post) =>
-                axios.get(`http://192.168.45.67:9090/api/likes/${post.postId}/isLiked`, {
+                axios.get(`http://${config.IP_ADD}:9090/api/likes/${post.postId}/isLiked`, {
                 headers: { Authorization: `Bearer ${user.token}` },
                 })
             );
@@ -60,7 +61,7 @@ const MyPost = () => {
     const likeButtonClick = async (postId) => {
         try {
             const isLiked = likedPosts[postId];
-            const url = `http://192.168.45.67:9090/api/likes/${postId}`;
+            const url = `http://${config.IP_ADD}:9090/api/likes/${postId}`;
             const method = isLiked ? "delete" : "post";
 
             await axios({ method, url, headers: { Authorization: `Bearer ${user.token}` } });
@@ -121,7 +122,7 @@ const MyPost = () => {
 
     return (
         <div>
-            <TopIcon text="MY POST"/>
+            <TopIcon text="내 기록 보기"/>
             <div className="post">
                 <table>
                     <tbody>
@@ -133,7 +134,7 @@ const MyPost = () => {
                                 justifyContent: "center", // 중앙 정렬
                                 gap: "20px", // 아이템들 간의 간격
                                 margin: "0 auto",
-                                maxWidth: "1000px", // 최대 너비 설정
+                                maxWidth: "1100px", // 최대 너비 설정
                             }}
                         >
                             {currentPosts.length > 0 ? (
@@ -150,7 +151,7 @@ const MyPost = () => {
                                             onClick={() => handlePostClick(post.postId)}
                                             src={
                                                 post.imageUrls && post.imageUrls.length > 0
-                                                    ? `http://192.168.45.67:9090${post.imageUrls[0]}`
+                                                    ? `http://${config.IP_ADD}:9090${post.imageUrls[0]}`
                                                     : logo
                                             }
                                             alt="썸네일"
@@ -177,9 +178,13 @@ const MyPost = () => {
                                                     marginLeft: "5px",
                                                 }}
                                             >
-                                                {likedPosts[post.postId] ? "❤️" : "🤍"}
-                                            </span>
-                                            <span>{post.likes}</span>                                          
+                                                <span style={{ color: "red" }}>
+                                                    {likedPosts[post.postId] ? "❤️" : "🤍"}
+                                                </span>
+                                                <span style={{ color: "black", marginLeft: "5px" }}>
+                                                    {post.likes}
+                                                </span>  
+                                                </span>                                  
                                         </div>
                                         <div
                                             style={{
@@ -228,19 +233,17 @@ const MyPost = () => {
                 >
                     <Button
                         variant="contained"
-                        color="primary"
                         onClick={()=>navigate("/post")}
-                        sx={{ width: "10%" }}
+                        sx={{ width: "10%" ,backgroundColor: "#4caf50" }}
                     >
-                        Post
+                        기록일지
                     </Button>
                     <Button
                         variant="contained"
-                        color="primary"
                         onClick={toWritePage}
-                        sx={{ width: "10%" }}
+                        sx={{ width: "10%" ,backgroundColor: "#4caf50"}}
                     >
-                        글쓰기
+                        기록하기
                     </Button>
                 </div>
 
