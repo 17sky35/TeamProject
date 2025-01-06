@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -33,6 +34,7 @@ public class UserService {
 	private final PasswordEncoder passwordEncoder;
 	
 	private final TokenProvider tokenProvider;
+	
 	
 	
 	
@@ -231,8 +233,7 @@ public class UserService {
     	
     }
     
-    
-    //프로필사진 수정
+  //프로필사진 수정
     public UserDTO userProfileImageEdit(Long id, MultipartFile file) {
     	
         try {
@@ -245,7 +246,7 @@ public class UserService {
             //기존 프로필 파일이 없거나 null이면 true
             if (existingUserProfileImage != null && !existingUserProfileImage.isEmpty()) {
             	//저장된 file 경로로 수정
-                String existingFilePath = System.getProperty("user.dir")+existingUserProfileImage;
+                String existingFilePath = "/home/ubuntu/app"+existingUserProfileImage;
                 File existingFile = new File(existingFilePath);	//객체 생성
                 if (existingFile.exists()) {	//해당 파일이있으면 true
                     if (existingFile.delete()) {
@@ -257,7 +258,7 @@ public class UserService {
             }
             
             //파일경로 지정
-            String uploadDir = System.getProperty("user.dir") + "/uploads/profilePictures/";
+            String uploadDir = "/home/ubuntu/app/uploads/profilePictures/";
             String fileName = file.getOriginalFilename().replaceAll("[\\s\\(\\)]", "_");
             //filePath - file 저장할 경로
             String filePath = uploadDir + id + "_" + fileName;
@@ -279,7 +280,7 @@ public class UserService {
             }
             
             //filePath는 파일저장 경로지 불러올때는 fileUrl로 불러와야한다.
-            //fileUrl - file불러올 경로 db에 저장
+            //fileUrl - file 불러올 경로 db 에 저장
             String fileUrl = "/uploads/profilePictures/" + id + "_" + fileName;
             
             //UserEntity에 프로필 사진 경로 업데이트

@@ -117,7 +117,7 @@ const Login = () => {
     setIsLoading(true);
 
     try {
-      const response = await axios.get(`http://${config.IP_ADD}:9090/api/email/auth?address=${findUserId}`);
+      const response = await axios.get(`https://${config.IP_ADD}/travel/email/auth?address=${findUserId}`);
       
       if (response.data.success) {
         alert("이메일 인증 코드가 발송되었습니다. 인증 코드를 입력하세요.");
@@ -147,7 +147,7 @@ const Login = () => {
     }
 
     // 인증 코드 검증
-    await axios.post(`http://${config.IP_ADD}:9090/api/email/auth?address=${findUserId}&authCode=${authCode}`)
+    await axios.post(`https://${config.IP_ADD}/travel/email/auth?address=${findUserId}&authCode=${authCode}`)
       .then((response) => {
         const { success } = response.data;
         if (success) {
@@ -283,7 +283,7 @@ const Login = () => {
       // JWT 디코딩하여 Google 사용자 정보 확인
       try {
         // Authorization 헤더에 Bearer 토큰 포함, payload는 본문에 전달
-        const response = await axios.post('http://192.168.3.24:9090/travel/oauth2/google/callback', { credential },{
+        const response = await axios.post(`https://${config.IP_ADD}/travel/oauth2/google/callback`, { credential },{
           headers: {
               'Authorization': `Bearer ${credential}` // Google 로그인 후 받은 credential
           }
