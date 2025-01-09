@@ -15,7 +15,7 @@ import { setCustomText } from 'react-native-global-props';
 SplashScreen.preventAutoHideAsync();
 
 const cacheResources = async () => {
-    const images = [require("../assets/splash.png")];
+    const images = [require("../assets/Logo.png")];
     const fonts = [
         { GCB_Bold: require("../assets/fonts/GCB_Bold.ttf")},
         { GCB: require("../assets/fonts/GCB.ttf")}

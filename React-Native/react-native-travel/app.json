@@ -8,8 +8,8 @@
     "userInterfaceStyle": "light",
     "newArchEnabled": true,
     "splash": {
-      "image": "./assets/splash.png",
-      "resizeMode": "contain",
+      "image": "./assets/LogoSplash.jpg",
+      "resizeMode": "cover",
       "backgroundColor": "#ffffff"
     },
     "ios": {
